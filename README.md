@@ -1,2 +1,0 @@
-# Lsec.github.io
-blog
