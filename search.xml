@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>web</title>
+      <link href="/2022/05/21/web/"/>
+      <url>/2022/05/21/web/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> ISCC-2022 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CTF </tag>
+            
+            <tag> Web </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="/2022/05/16/hello-world/"/>
       <url>/2022/05/16/hello-world/</url>
