@@ -486,7 +486,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    297
+                    305
                 </div>
                 
 
@@ -508,6 +508,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lsec-cyber/Lsec-cyber.github.io/libs/prism/prism.css">
+        
 
         
 
@@ -522,7 +525,27 @@
 <p><img src="/medias/Kali/Vega/6.jpg"> </p>
 <h2 id="5-安装依赖-ibwebkitgtk-1-0-0"><a href="#5-安装依赖-ibwebkitgtk-1-0-0" class="headerlink" title="5.安装依赖 ibwebkitgtk-1.0-0"></a>5.安装依赖 ibwebkitgtk-1.0-0</h2><p>命令: apt install libwebkitgtk-1.0-0</p>
 <p><img src="/medias/Kali/Vega/7.jpg"> </p>
-<h2 id="6-美化安装方便使用"><a href="#6-美化安装方便使用" class="headerlink" title="6.美化安装方便使用"></a>6.美化安装方便使用</h2><figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">defaultText=<span class="string">"\e[39m"</span></span><br><span class="line">blueText=<span class="string">"\e[34m"</span></span><br><span class="line">yellowText=<span class="string">"\e[33m"</span></span><br><span class="line">redText=<span class="string">"\e[31m"</span></span><br><span class="line">greenText=<span class="string">"\e[32m"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cp</span> -r vega /usr/share/</span><br><span class="line"><span class="comment"># Create Accessable Launcher</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"<span class="variable">${blueText}</span>Creating Desktop Icon . . .<span class="variable">${defaultText}</span>"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"[Desktop Entry]"</span> | sudo <span class="built_in">tee</span> -a /usr/share/applications/Vega.desktop</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Name=Vega"</span> | sudo <span class="built_in">tee</span> -a /usr/share/applications/Vega.desktop</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Exec=/usr/share/vega/Vega"</span> | sudo <span class="built_in">tee</span> -a /usr/share/applications/Vega.desktop</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Icon=/usr/share/vega/Vega.png"</span> | sudo <span class="built_in">tee</span> -a /usr/share/applications/Vega.desktop</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Terminal=false"</span> | sudo <span class="built_in">tee</span> -a /usr/share/applications/Vega.desktop</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Type=Application"</span> | sudo <span class="built_in">tee</span> -a /usr/share/applications/Vega.desktop</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"Categories=03-webapp-analysis;03-05-web-vulnerability-scanners;"</span> | sudo <span class="built_in">tee</span> -a /usr/share/applications/Vega.desktop</span><br><span class="line"></span><br><span class="line"><span class="comment"># Finish</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"<span class="variable">${greenText}</span>Vega should now be installed!\nLaunch via Applications/Web Application Analysis/Vega"</span></span><br></pre></td></tr></tbody></table></figure>
+<h2 id="6-美化安装方便使用"><a href="#6-美化安装方便使用" class="headerlink" title="6.美化安装方便使用"></a>6.美化安装方便使用</h2><pre class="language-sh" data-language="sh"><code class="language-sh">#!/bin/bash
+
+defaultText="\e[39m"
+blueText="\e[34m"
+yellowText="\e[33m"
+redText="\e[31m"
+greenText="\e[32m"
+
+cp -r vega /usr/share/
+# Create Accessable Launcher
+echo -e "${blueText}Creating Desktop Icon . . .${defaultText}"
+echo "[Desktop Entry]" | sudo tee -a /usr/share/applications/Vega.desktop
+echo "Name=Vega" | sudo tee -a /usr/share/applications/Vega.desktop
+echo "Exec=/usr/share/vega/Vega" | sudo tee -a /usr/share/applications/Vega.desktop
+echo "Icon=/usr/share/vega/Vega.png" | sudo tee -a /usr/share/applications/Vega.desktop
+echo "Terminal=false" | sudo tee -a /usr/share/applications/Vega.desktop
+echo "Type=Application" | sudo tee -a /usr/share/applications/Vega.desktop
+echo "Categories=03-webapp-analysis;03-05-web-vulnerability-scanners;" | sudo tee -a /usr/share/applications/Vega.desktop
+
+# Finish
+echo -e "${greenText}Vega should now be installed!\nLaunch via Applications/Web Application Analysis/Vega"</code></pre>
 
 <p>installvega.sh文件与Vega在同一目录下</p>
 <p><img src="/medias/Kali/Vega/8.jpg"> </p>
@@ -1009,12 +1032,12 @@ new Valine({
                         <span class="chip bg-color">CTF</span>
                     </a>
                     
-                    <a href="/tags/ISCC-2022/">
-                        <span class="chip bg-color">ISCC-2022</span>
-                    </a>
-                    
                     <a href="/tags/Mobile/">
                         <span class="chip bg-color">Mobile</span>
+                    </a>
+                    
+                    <a href="/tags/ISCC-2022/">
+                        <span class="chip bg-color">ISCC-2022</span>
                     </a>
                     
                 </div>
@@ -1065,12 +1088,12 @@ new Valine({
                         <span class="chip bg-color">CTF</span>
                     </a>
                     
-                    <a href="/tags/Misc/">
-                        <span class="chip bg-color">Misc</span>
-                    </a>
-                    
                     <a href="/tags/ISCC-2022/">
                         <span class="chip bg-color">ISCC-2022</span>
+                    </a>
+                    
+                    <a href="/tags/Misc/">
+                        <span class="chip bg-color">Misc</span>
                     </a>
                     
                 </div>
@@ -1307,7 +1330,7 @@ new Valine({
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">297</span>&nbsp;字
+                class="white-color">305</span>&nbsp;字
             
             
             
