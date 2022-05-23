@@ -31,8 +31,7 @@
 
 <meta name="generator" content="Hexo 6.2.0">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
 
@@ -509,9 +508,6 @@
         <hr class="clearfix">
 
         
-        <!-- 是否加载使用自带的 prismjs. -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lsec-cyber/Lsec-cyber.github.io/libs/prism/prism.css">
-        
 
         
 
@@ -526,7 +522,7 @@
 <p><img src="/medias/Kali/Vega/6.jpg"> </p>
 <h2 id="5-安装依赖-ibwebkitgtk-1-0-0"><a href="#5-安装依赖-ibwebkitgtk-1-0-0" class="headerlink" title="5.安装依赖 ibwebkitgtk-1.0-0"></a>5.安装依赖 ibwebkitgtk-1.0-0</h2><p>命令: apt install libwebkitgtk-1.0-0</p>
 <p><img src="/medias/Kali/Vega/7.jpg"> </p>
-<h2 id="6-美化安装方便使用"><a href="#6-美化安装方便使用" class="headerlink" title="6.美化安装方便使用"></a>6.美化安装方便使用</h2><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">#!/bin/bash
+<h2 id="6-美化安装方便使用"><a href="#6-美化安装方便使用" class="headerlink" title="6.美化安装方便使用"></a>6.美化安装方便使用</h2><pre class=" language-sh"><code class="language-sh">#!/bin/bash
 
 defaultText="\e[39m"
 blueText="\e[34m"
@@ -546,8 +542,8 @@ echo "Type=Application" | sudo tee -a /usr/share/applications/Vega.desktop
 echo "Categories=03-webapp-analysis;03-05-web-vulnerability-scanners;" | sudo tee -a /usr/share/applications/Vega.desktop
 
 # Finish
-echo -e "${greenText}Vega should now be installed!\nLaunch via Applications/Web Application Analysis/Vega"<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+echo -e "${greenText}Vega should now be installed!\nLaunch via Applications/Web Application Analysis/Vega"
+</code></pre>
 <p>installvega.sh文件与Vega在同一目录下</p>
 <p><img src="/medias/Kali/Vega/8.jpg"> </p>
 <p><img src="/medias/Kali/Vega/9.jpg"> </p>
