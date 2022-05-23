@@ -51,9 +51,9 @@
             
             <tag> CTF </tag>
             
-            <tag> Mobile </tag>
-            
             <tag> ISCC-2022 </tag>
+            
+            <tag> Mobile </tag>
             
         </tags>
       
@@ -71,7 +71,7 @@
       
       <categories>
           
-          <category> ISCC-2022 </category>
+          <category> /CTF/ISCC-2022 </category>
           
       </categories>
       
@@ -80,9 +80,9 @@
             
             <tag> CTF </tag>
             
-            <tag> ISCC-2022 </tag>
-            
             <tag> Misc </tag>
+            
+            <tag> ISCC-2022 </tag>
             
         </tags>
       
