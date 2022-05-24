@@ -525,7 +525,7 @@
 <p><img src="/medias/Kali/Vega/6.jpg"> </p>
 <h2 id="5-安装依赖-ibwebkitgtk-1-0-0"><a href="#5-安装依赖-ibwebkitgtk-1-0-0" class="headerlink" title="5.安装依赖 ibwebkitgtk-1.0-0"></a>5.安装依赖 ibwebkitgtk-1.0-0</h2><p>命令: apt install libwebkitgtk-1.0-0</p>
 <p><img src="/medias/Kali/Vega/7.jpg"> </p>
-<h2 id="6-美化安装方便使用"><a href="#6-美化安装方便使用" class="headerlink" title="6.美化安装方便使用"></a>6.美化安装方便使用</h2><pre class="language-sh" data-language="sh"><code class="language-sh">#!/bin/bash
+<h2 id="6-美化安装方便使用"><a href="#6-美化安装方便使用" class="headerlink" title="6.美化安装方便使用"></a>6.美化安装方便使用</h2><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">#!/bin/bash
 
 defaultText="\e[39m"
 blueText="\e[34m"
@@ -545,7 +545,7 @@ echo "Type=Application" | sudo tee -a /usr/share/applications/Vega.desktop
 echo "Categories=03-webapp-analysis;03-05-web-vulnerability-scanners;" | sudo tee -a /usr/share/applications/Vega.desktop
 
 # Finish
-echo -e "${greenText}Vega should now be installed!\nLaunch via Applications/Web Application Analysis/Vega"</code></pre>
+echo -e "${greenText}Vega should now be installed!\nLaunch via Applications/Web Application Analysis/Vega"<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>installvega.sh文件与Vega在同一目录下</p>
 <p><img src="/medias/Kali/Vega/8.jpg"> </p>
@@ -995,12 +995,12 @@ new Valine({
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/05/21/misc/">
+                <a href="/2022/05/21/mobile/">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/Misc.jpg" class="responsive-img" alt="Misc">
+                        <img src="/medias/featureimages/Mobile.jpg" class="responsive-img" alt="Mobile">
                         
-                        <span class="card-title">Misc</span>
+                        <span class="card-title">Mobile</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1032,8 +1032,8 @@ new Valine({
                         <span class="chip bg-color">CTF</span>
                     </a>
                     
-                    <a href="/tags/Misc/">
-                        <span class="chip bg-color">Misc</span>
+                    <a href="/tags/Mobile/">
+                        <span class="chip bg-color">Mobile</span>
                     </a>
                     
                     <a href="/tags/ISCC-2022/">
@@ -1051,12 +1051,12 @@ new Valine({
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/05/21/reverse/">
+                <a href="/2022/05/21/misc/">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/Reverse.jpg" class="responsive-img" alt="Reverse">
+                        <img src="/medias/featureimages/Misc.jpg" class="responsive-img" alt="Misc">
                         
-                        <span class="card-title">Reverse</span>
+                        <span class="card-title">Misc</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1092,8 +1092,8 @@ new Valine({
                         <span class="chip bg-color">ISCC-2022</span>
                     </a>
                     
-                    <a href="/tags/Reverse/">
-                        <span class="chip bg-color">Reverse</span>
+                    <a href="/tags/Misc/">
+                        <span class="chip bg-color">Misc</span>
                     </a>
                     
                 </div>
@@ -1137,7 +1137,7 @@ new Valine({
             + '来源: Lsec<br />'
             + '文章作者: Lsec<br />'
             + '文章链接: <a href="' + url + '">' + url + '</a><br />'
-            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+            + '复制成功。';
 
         selection.selectAllChildren(newdiv);
         window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
