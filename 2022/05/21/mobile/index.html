@@ -483,21 +483,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-05-21
+                    2022-05-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    1.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    6 分
                 </div>
                 
 
@@ -520,7 +520,257 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h2 id="Mobile-A"><a href="#Mobile-A" class="headerlink" title="Mobile A"></a><font color="DarkTurquoise">Mobile A</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/a-1.png"></p>
+<h3 id="使用jadx-gui打开apk文件，搜索main函数"><a href="#使用jadx-gui打开apk文件，搜索main函数" class="headerlink" title="使用jadx-gui打开apk文件，搜索main函数"></a>使用jadx-gui打开apk文件，搜索main函数</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/a-2.png"></p>
+<h3 id="查看-com-example-mobilea-MainActivity"><a href="#查看-com-example-mobilea-MainActivity" class="headerlink" title="查看  com.example.mobilea.MainActivity"></a>查看  <code>com.example.mobilea.MainActivity</code></h3><pre class="line-numbers language-java" data-language="java"><code class="language-java">private boolean Jlast(String str) {
+        try {
+            MessageDigest instance = MessageDigest.getInstance("MD5");
+            new encode.BASE64Encoder();
+            String encode = encode.BASE64Encoder.encode(instance.digest(str.getBytes("utf-8")));
+            if (encode.length() != 24) {
+                return false;
+            }
+            char[] cArr = new char[encode.length()];
+            boolean z = false;
+            int i = 0;
+            for (int i2 = 5; i2 &gt;= 0; i2--) {
+                if (!z) {
+                    for (int i3 = 3; i3 &gt;= 0; i3--) {
+                        cArr[i] = encode.charAt((i3 * 6) + i2);
+                        i++;
+                    }
+                    z = true;
+                } else {
+                    for (int i4 = 0; i4 &lt;= 3; i4++) {
+                        cArr[i] = encode.charAt((i4 * 6) + i2);
+                        i++;
+                    }
+                    z = false;
+                }
+            }
+            if (String.valueOf(cArr).equals("=IkMBb+=gF2/Try5PCUruw1j")) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>审计得，上面把传入的字符串进行顺序重排后要与 =IkMBb+=gF2/Try5PCUruw1j  一致。</p>
+</blockquote>
+<blockquote>
+<p>来自 hanser师傅的重排序脚本</p>
+</blockquote>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">a = r'=IkMBb+=gF2/Try5PCUruw1j'
+b = [20,19,12,11,4,3,21,18,13,10,5,2,22,17,14,9,6,1,23,16,15,8,7,0]
+for i in b:
+    print(a[i],end='')<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>解出后为urT/BMwUr2bk1CyF+IjP5g== ，进行base64解密后为 BAB4FF04CC14AF66E4D42C85F888CFE6 ，进行md5解密后为 leaf</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/a-3.png"></p>
+<h3 id="继续审计代码"><a href="#继续审计代码" class="headerlink" title="继续审计代码"></a>继续审计代码</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java">/* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private boolean Jformat(String str) {
+        int lastIndexOf = str.lastIndexOf("_");
+        if (lastIndexOf != -1 &amp;&amp; str.length() &gt;= 10 &amp;&amp; str.substring(0, 5).equals("ISCC{") &amp;&amp; str.charAt(str.length() - 1) == '}') {
+            int i = lastIndexOf + 1;
+            if (Jlast(str.substring(i, str.length() - 1))) {
+                try {
+                    byte[] bytes = new String(Base64.encode("K@e2022%%y".getBytes(StandardCharsets.UTF_8), 0)).replace("\n", "").getBytes(StandardCharsets.UTF_8);
+                    byte[] bytes2 = new String(Base64.encode("I&amp;V2022***".getBytes(StandardCharsets.UTF_8), 0)).replace("\n", "").getBytes(StandardCharsets.UTF_8);
+                    byte[] bytes3 = str.substring(5, i).getBytes(StandardCharsets.UTF_8);
+                    SecretKeySpec secretKeySpec = new SecretKeySpec(bytes, "AES");
+                    IvParameterSpec ivParameterSpec = new IvParameterSpec(bytes2);
+                    Cipher instance = Cipher.getInstance("AES/CBC/PKCS7Padding");
+                    instance.init(1, secretKeySpec, ivParameterSpec);
+                    if (new String(Base64.encode(Base64.encodeToString(instance.doFinal(bytes3), 2).getBytes(StandardCharsets.UTF_8), 0)).replace("\n", "").equals("ZHNGazZsRGM1MXZ4VnQ1bUdadEptNDJaUkVqY2lyOFlQcEhEUGs5cDJxWT0=")) {
+                        return true;
+                    }
+                    return false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>对 K@e2022%%y 和 I&amp;V2022*** 进行base64加密</p>
+</blockquote>
+<blockquote>
+<p>对 ZHNGazZsRGM1MXZ4VnQ1bUdadEptNDJaUkVqY2lyOFlQcEhEUGs5cDJxWT0= 进行base64解密</p>
+</blockquote>
+<h3 id="进行AES-CBC解密，即为flag"><a href="#进行AES-CBC解密，即为flag" class="headerlink" title="进行AES-CBC解密，即为flag"></a>进行AES-CBC解密，即为flag</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/a-4.png"></p>
+<h2 id="Mobile-B"><a href="#Mobile-B" class="headerlink" title="Mobile B"></a><font color="DarkTurquoise">Mobile B</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/b-1.png"></p>
+<h3 id="对apk进行反编译"><a href="#对apk进行反编译" class="headerlink" title="对apk进行反编译"></a>对apk进行反编译</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/b-3.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/b-4.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/b-5.png"></p>
+<h3 id="根据代码审计得到的加密规律，进行解密"><a href="#根据代码审计得到的加密规律，进行解密" class="headerlink" title="根据代码审计得到的加密规律，进行解密"></a>根据代码审计得到的加密规律，进行解密</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">a=input("加密结果(反编译APK，在MainActivity中一串数字):")[:-1]
+print("IDA打开APK中lib文件夹内任意so文件，Shift+F12查找字符串，在.rodata前12段")
+b=input("段1")
+b+=b
+c=input("段2")
+c+=c
+d=input("段3")
+d+=d
+e=input("段4")
+e+=e
+f=input("段5")
+f+=f
+g=input("段6")
+g+=g
+h=input("段7")
+h+=h
+i=input("段8")
+i+=i
+j=input("段9")
+j+=j
+k=input("段10")
+k+=k
+l=input("段11")
+l+=l
+m=input("段12")：：
+m+=m
+n=
+[5,1,51,2,52,12,512,3,53,13,513,23,523,123,5123,4,54,14,514,24,524,124,5124,34,5
+34,134,5134,234,5234,1234,51234]
+a=list(map(int,a.split("0")))
+o="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+p=[]
+运行得到flag:
+ISCC{FLAGISGSFWLC}
+for r in a:
+p.append(o[n.index(r)])
+q=[d,m,g,i,h,c,e,l,b,f,j,k]
+print("ISCC{",end='')
+for r in range(12):
+print(q[r][q[r].index(p[r],26)-9],end='')
+print('}')<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>来自hanser师傅的脚本</p>
+</blockquote>
+<pre class="line-numbers language-none"><code class="language-none">s = '5240520105205230123051305205403052405240'
+s = s.split('0')[:-1]
+flag = []
+for i in s:
+&nbsp; &nbsp; t = 0
+&nbsp; &nbsp; for j in i:
+&nbsp; &nbsp; &nbsp; &nbsp; k = int(j)
+&nbsp; &nbsp; &nbsp; &nbsp; if k == 5:
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; k = 0
+&nbsp; &nbsp; &nbsp; &nbsp; t += 2**k
+&nbsp; &nbsp; flag.append(t+64)
+
+flag = ''.join(map(chr,flag))
+
+key = [3,12,6,8,7,2,4,11,1,5,9,10]
+tab = ['MTURVPYCJGZOQNKASEWFIXBHLD',
+&nbsp; &nbsp; &nbsp; &nbsp;'CKTUVBXSAFJDGHIMNYZOPQRWEL',
+&nbsp; &nbsp; &nbsp; &nbsp;'WXOPZGNVYDEFIJCBKARLUQHMST',
+&nbsp; &nbsp; &nbsp; &nbsp;'FBSNOPMACKDRQITUVWHZLJXYGE',
+&nbsp; &nbsp; &nbsp; &nbsp;'OMEJCXYFZBQRAPGSDTINKLUHVW',
+&nbsp; &nbsp; &nbsp; &nbsp;'XASQGMTFIRBVHEJUOCDYZPKLNW',
+&nbsp; &nbsp; &nbsp; &nbsp;'EHWUVRYOPQSIBXJACTZGMNDFLK',
+&nbsp; &nbsp; &nbsp; &nbsp;'VWNIKAXMOGHLZBRDQJEUYFPCST',
+&nbsp; &nbsp; &nbsp; &nbsp;'FDXYUKOPJMBCZLIGNVWSTEHAQR',
+&nbsp; &nbsp; &nbsp; &nbsp;'NSKBRTUZEJOPGHIFXCDAVWQYLM',
+&nbsp; &nbsp; &nbsp; &nbsp;'CLYMVHXASTKNWIUOPZJDBQGREF',
+&nbsp; &nbsp; &nbsp; &nbsp;'AYTNCBDRSQLZWXOPKJGEHIMFUV']
+res = []
+for k,f in zip(key,flag):
+&nbsp; &nbsp; s = tab[k-1]
+&nbsp; &nbsp; t = s[s.index(f):]+s[:s.index(f)]
+&nbsp; &nbsp; res.append(t)
+
+for i in range(26):
+&nbsp; &nbsp; t = ''
+&nbsp; &nbsp; for j in range(12):
+&nbsp; &nbsp; &nbsp; &nbsp; t += res[j][i]
+&nbsp; &nbsp; print(t.lower())<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="Mobile-C"><a href="#Mobile-C" class="headerlink" title="Mobile C"></a><font color="DarkTurquoise">Mobile C</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/mc-1.png"></p>
+<h3 id="查看MainActivity函数，后发现有一个a函数，进去查看"><a href="#查看MainActivity函数，后发现有一个a函数，进去查看" class="headerlink" title="查看MainActivity函数，后发现有一个a函数，进去查看"></a>查看MainActivity函数，后发现有一个a函数，进去查看</h3><pre class="line-numbers language-none"><code class="language-none">public class a {
+    public static boolean a(String str) {
+        try {
+            byte[] bytes = Myjni.GetKey().getBytes(StandardCharsets.UTF_8);
+            byte[] bytes2 = new String(Base64.encode("i@S&amp;88CcC.".getBytes(StandardCharsets.UTF_8), 0)).replace("\n", "").getBytes(StandardCharsets.UTF_8);
+            byte[] bytes3 = str.getBytes(StandardCharsets.UTF_8);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(bytes, "AES");
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(bytes2);
+            Cipher instance = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            instance.init(1, secretKeySpec, ivParameterSpec);
+            if (Myjni.GetStr(Base64.encodeToString(instance.doFinal(bytes3), 2), str).equals("vU8oschIOV/lnL9=ccRmwKw=nn3EYQy=tQ98Lon=oiugcLs=")) {
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>再看getStr函数，先把44的base64填充为48位，填充一堆等号。之后6个一组 分为8组，根据一个k=[1,6,5,2,3,4]在每组中取值，比如k=1 则在第一组第一个、第二组第1个依次取8个。</p>
+</blockquote>
+<blockquote>
+<p>我们需要找到GetKey值</p>
+</blockquote>
+<h3 id="查看so文件"><a href="#查看so文件" class="headerlink" title="查看so文件"></a>查看so文件</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/mc-2.png"></p>
+<ul>
+<li>采用IDA对so文件进行动态调试后获得GetKey值</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/mc-3.png"></p>
+<ul>
+<li>采用Frida对apk进行抓取</li>
+</ul>
+<blockquote>
+<p>用到工具为 Frida 、 夜神模拟器、 objection</p>
+</blockquote>
+<blockquote>
+<p>后面会发关于Frida环境搭建的文章</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/mc-4.png"></p>
+<h3 id="采用脚本对其进行爆破"><a href="#采用脚本对其进行爆破" class="headerlink" title="采用脚本对其进行爆破"></a>采用脚本对其进行爆破</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">import base64
+from Crypto.Cipher import AES
+enc=[]
+import copy
+def dfs(s,p):
+	if p==6:
+		enc.append(s)
+		return
+	for i in range(p,6):
+		s[i],s[p]=s[p],s[i]
+		t=copy.deepcopy(s)
+		dfs(t,p+1)
+		s[i],s[p]=s[p],s[i]
+def fun(s):
+	s=base64.b64decode(s)
+	iv = 'i@S&amp;88CcC.'
+	iv = base64.b64encode(iv.encode())
+	key = b'QERAPG9dPyZfTC5f'
+	aes = AES.new(key, AES.MODE_CBC, iv)
+	print(aes.decrypt(s))
+dfs([1,2,3,4,5,6],0)
+s='GuU678D= 4znHQ3C= 3a+v61P= LOioU7d= UyVNXXT= BOR9lbU0'.split(' ')
+for k in enc:
+	m=[0]*48
+	for i in range(6):
+		for j in range(8):
+			m[6*j+k[i]-1]=s[i][j]
+	check=''.join(m)[-5:]
+	if check=='=====':
+		fun(''.join(m)[0:44])
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
                 
             </div>
             <hr/>
@@ -961,6 +1211,62 @@ new Valine({
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
+                <a href="/2022/05/22/reverse/">
+                    <div class="card-image">
+                        
+                        <img src="/medias/featureimages/Reverse.jpg" class="responsive-img" alt="Reverse">
+                        
+                        <span class="card-title">Reverse</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-05-22
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/ISCC-2022/" class="post-category">
+                                    ISCC-2022
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CTF/">
+                        <span class="chip bg-color">CTF</span>
+                    </a>
+                    
+                    <a href="/tags/ISCC-2022/">
+                        <span class="chip bg-color">ISCC-2022</span>
+                    </a>
+                    
+                    <a href="/tags/Reverse/">
+                        <span class="chip bg-color">Reverse</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
                 <a href="/2022/05/21/pwn/">
                     <div class="card-image">
                         
@@ -976,9 +1282,9 @@ new Valine({
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1004,58 +1310,6 @@ new Valine({
                     
                     <a href="/tags/Pwn/">
                         <span class="chip bg-color">Pwn</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/05/21/kali-vega/">
-                    <div class="card-image">
-                        
-                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="Kali2021安装Vega">
-                        
-                        <span class="card-title">Kali2021安装Vega</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Kali-Tools/" class="post-category">
-                                    Kali-Tools
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Vega/">
-                        <span class="chip bg-color">Vega</span>
-                    </a>
-                    
-                    <a href="/tags/Kali-Tools/">
-                        <span class="chip bg-color">Kali-Tools</span>
                     </a>
                     
                 </div>
@@ -1294,7 +1548,7 @@ new Valine({
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">529</span>&nbsp;字
+                class="white-color">13.8k</span>&nbsp;字
             
             
             

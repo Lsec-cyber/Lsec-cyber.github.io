@@ -483,21 +483,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-05-23
+                    2022-05-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    1.5k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    6 分
                 </div>
                 
 
@@ -520,7 +520,281 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h2 id="2022冬奥会"><a href="#2022冬奥会" class="headerlink" title="2022冬奥会"></a><font color="DarkTurquoise">2022冬奥会</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/2022-1.png"></p>
+<blockquote>
+<p>题目已经提示了很明显，其实压缩包密码就是灯笼</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/2022-2.png"></p>
+<p>###进行crc修复，附上脚本</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">import binascii
+import struct
+import sys
+
+file = input("图片地址：")
+fr = open(file,'rb').read()
+data = bytearray(fr[0x0c:0x1d])
+crc32key = eval('0x'+str(binascii.b2a_hex(fr[0x1d:0x21]))[2:-1])
+#原来的代码: crc32key = eval(str(fr[29:33]).replace('\\x','').replace("b'",'0x').replace("'",''))
+n = 4095
+for w in range(n):
+    width = bytearray(struct.pack('&gt;i', w))
+    for h in range(n):
+        height = bytearray(struct.pack('&gt;i', h))
+        for x in range(4):
+            data[x+4] = width[x]
+            data[x+8] = height[x]
+        crc32result = binascii.crc32(data) &amp; 0xffffffff
+        if crc32result == crc32key:
+            print(width,height)
+            newpic = bytearray(fr)
+            for x in range(4):
+                newpic[x+16] = width[x]
+                newpic[x+20] = height[x]
+            fw = open(file+'.png','wb')
+            fw.write(newpic)
+            fw.close
+            sys.exit()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/2022-3.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/2022-4.png"></p>
+<h3 id="进行Unicode解码"><a href="#进行Unicode解码" class="headerlink" title="进行Unicode解码"></a>进行Unicode解码</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/2022-5.png"></p>
+<blockquote>
+<p>压缩包密码为 灯笼 ，解开即为flag</p>
+</blockquote>
+<h2 id="藏在星空中的诗-1"><a href="#藏在星空中的诗-1" class="headerlink" title="藏在星空中的诗-1"></a><font color="DarkTurquoise">藏在星空中的诗-1</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c-1.png"></p>
+<h3 id="查看附件有以下内容"><a href="#查看附件有以下内容" class="headerlink" title="查看附件有以下内容"></a>查看附件有以下内容</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c-2.png"></p>
+<h3 id="使用PS打开psd文件，发现有两个图层，解开发现是个顺序-13524"><a href="#使用PS打开psd文件，发现有两个图层，解开发现是个顺序-13524" class="headerlink" title="使用PS打开psd文件，发现有两个图层，解开发现是个顺序 13524"></a>使用PS打开psd文件，发现有两个图层，解开发现是个顺序 13524</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c-3.png"></p>
+<h3 id="压缩包需要密码，观察txt文件，发现其有序号，对其进行排序"><a href="#压缩包需要密码，观察txt文件，发现其有序号，对其进行排序" class="headerlink" title="压缩包需要密码，观察txt文件，发现其有序号，对其进行排序"></a>压缩包需要密码，观察txt文件，发现其有序号，对其进行排序</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c-4.png"></p>
+<blockquote>
+<p>顺序为 ☆✪٭☪✲☆★⚝🟌★✮🟇٭🟔🞱✡🟇⍟⍟✸⚝٭⚝✦🟌</p>
+</blockquote>
+<h3 id="去尝试解开压缩包，发现解压成功，得到一份密码本"><a href="#去尝试解开压缩包，发现解压成功，得到一份密码本" class="headerlink" title="去尝试解开压缩包，发现解压成功，得到一份密码本"></a>去尝试解开压缩包，发现解压成功，得到一份密码本</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c-5.png"></p>
+<h3 id="根据密码本对txt进行翻译，匹配字符-拼接即为flag-可以写个脚本"><a href="#根据密码本对txt进行翻译，匹配字符-拼接即为flag-可以写个脚本" class="headerlink" title="根据密码本对txt进行翻译，匹配字符,拼接即为flag(可以写个脚本)"></a>根据密码本对txt进行翻译，匹配字符,拼接即为flag(可以写个脚本)</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c-6.png"></p>
+<h2 id="藏在星空中的诗-2"><a href="#藏在星空中的诗-2" class="headerlink" title="藏在星空中的诗-2"></a><font color="DarkTurquoise">藏在星空中的诗-2</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c2-1.png"></p>
+<h3 id="查看附件"><a href="#查看附件" class="headerlink" title="查看附件"></a>查看附件</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c2-2.png"></p>
+<blockquote>
+<p>\🌟🌠🌠✴🟉\🌟🌠🌠★⍣\🌟🌠🌠✴⍣\🌟🌠🌠✴⍣\🌟🌠🌠✧≛\🌟🌠🌠⍣★\🌟🌠🌠✴🌠\🌟🌠🌠★★\🌟🌠🌠★⍣\🌟🌠🌠✲✡\🌟🌠🌠☆⚝\🌟🌠🌠★✧\🌟🌠🌠☆🟉\🌟🌠🌠⍣★\🌟🌠🌠✲✸\🌟🌠🌠✲⍣\🌟🌠🌠☆✡\🌟🌠🌠✧✡\🌟🌠🌠✧✴\🌟🌠🌠✧⚝</p>
+</blockquote>
+<h3 id="继续匹配-星空1-获取的密码本"><a href="#继续匹配-星空1-获取的密码本" class="headerlink" title="继续匹配 星空1 获取的密码本"></a>继续匹配 星空1 获取的密码本</h3><blockquote>
+<p>观察上面一串符号发现开头都是  🌟🌠🌠 ，与Unicode的 u00 很像。根据猜测匹配测试</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Q</th>
+<th>🌟</th>
+<th>U+1F31F</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T</td>
+<td>🌠</td>
+<td>U+1F320</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>🌠匹配的U+1F320中末尾值正好为0，所有都按这个规则进行匹配测试，正好符合flag形式</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c2-3.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/c2-4.png"></p>
+<h2 id="单板小将苏翊鸣"><a href="#单板小将苏翊鸣" class="headerlink" title="单板小将苏翊鸣"></a><font color="DarkTurquoise">单板小将苏翊鸣</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/d-1.png"></p>
+<h2 id="得到两附件"><a href="#得到两附件" class="headerlink" title="得到两附件"></a>得到两附件</h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/d-2.png"></p>
+<h3 id="对png进行crc修复，脚本如下"><a href="#对png进行crc修复，脚本如下" class="headerlink" title="对png进行crc修复，脚本如下"></a>对png进行crc修复，脚本如下</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">import binascii
+import struct
+import sys
+
+file = input("图片地址：")
+fr = open(file,'rb').read()
+data = bytearray(fr[0x0c:0x1d])
+crc32key = eval('0x'+str(binascii.b2a_hex(fr[0x1d:0x21]))[2:-1])
+#原来的代码: crc32key = eval(str(fr[29:33]).replace('\\x','').replace("b'",'0x').replace("'",''))
+n = 4095
+for w in range(n):
+    width = bytearray(struct.pack('&gt;i', w))
+    for h in range(n):
+        height = bytearray(struct.pack('&gt;i', h))
+        for x in range(4):
+            data[x+4] = width[x]
+            data[x+8] = height[x]
+        crc32result = binascii.crc32(data) &amp; 0xffffffff
+        if crc32result == crc32key:
+            print(width,height)
+            newpic = bytearray(fr)
+            for x in range(4):
+                newpic[x+16] = width[x]
+                newpic[x+20] = height[x]
+            fw = open(file+'.png','wb')
+            fw.write(newpic)
+            fw.close
+            sys.exit()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/d-3.png"></p>
+<h3 id="打开生成的图片，发现二维码"><a href="#打开生成的图片，发现二维码" class="headerlink" title="打开生成的图片，发现二维码"></a>打开生成的图片，发现二维码</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/d-4.png"></p>
+<h3 id="进行扫码"><a href="#进行扫码" class="headerlink" title="进行扫码"></a>进行扫码</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/d-5.png"></p>
+<h3 id="进行Unicode解码-1"><a href="#进行Unicode解码-1" class="headerlink" title="进行Unicode解码"></a>进行Unicode解码</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/d-6.png"></p>
+<h3 id="百度搜索"><a href="#百度搜索" class="headerlink" title="百度搜索"></a>百度搜索</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/d-7.png"></p>
+<blockquote>
+<p>解压密码为 15942 ，解开即为flag</p>
+</blockquote>
+<h2 id="降维打击"><a href="#降维打击" class="headerlink" title="降维打击"></a><font color="DarkTurquoise">降维打击</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/j-1.png"></p>
+<h3 id="解压后发现其在python工作路径下生成"><a href="#解压后发现其在python工作路径下生成" class="headerlink" title="解压后发现其在python工作路径下生成"></a>解压后发现其在python工作路径下生成</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/j-2.png"></p>
+<h3 id="使用binwalk和foremost进行图片分离"><a href="#使用binwalk和foremost进行图片分离" class="headerlink" title="使用binwalk和foremost进行图片分离"></a>使用binwalk和foremost进行图片分离</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/j-3.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/j-4.png"></p>
+<h3 id="使用zsteg查看图片是否有隐写信息"><a href="#使用zsteg查看图片是否有隐写信息" class="headerlink" title="使用zsteg查看图片是否有隐写信息"></a>使用zsteg查看图片是否有隐写信息</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/j-5.png"></p>
+<h3 id="提取image-data"><a href="#提取image-data" class="headerlink" title="提取image data"></a>提取image data</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/j-6.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/j-7.png"></p>
+<blockquote>
+<p>该文字结合开头原本图片的人物角色，找到了魔女之旅，并且有人已经翻译了该文字</p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv7855745/">《魔女之旅》文字破解 - 哔哩哔哩 (bilibili.com)</a></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/j-8.png"></p>
+<blockquote>
+<p>进行一一对比，即为flag。</p>
+</blockquote>
+<h2 id="套中套"><a href="#套中套" class="headerlink" title="套中套"></a><font color="DarkTurquoise">套中套</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-1.png"></p>
+<h3 id="查看附件内容"><a href="#查看附件内容" class="headerlink" title="查看附件内容"></a>查看附件内容</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-2.png"></p>
+<h3 id="打开png发现图片损坏，使用010editor打开，文件格式正好为PNG，进行文件头修复"><a href="#打开png发现图片损坏，使用010editor打开，文件格式正好为PNG，进行文件头修复" class="headerlink" title="打开png发现图片损坏，使用010editor打开，文件格式正好为PNG，进行文件头修复"></a>打开png发现图片损坏，使用010editor打开，文件格式正好为PNG，进行文件头修复</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-3.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-4.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-5.png"></p>
+<blockquote>
+<p>使用010editor修复过程中发现图片末尾存在一串base64</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-6.png"></p>
+<blockquote>
+<p>解码得  flag2: _ISCC_Zo2z</p>
+</blockquote>
+<h3 id="继续查看图片，修复一下crc"><a href="#继续查看图片，修复一下crc" class="headerlink" title="继续查看图片，修复一下crc"></a>继续查看图片，修复一下crc</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-7.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-8.png"></p>
+<blockquote>
+<p>但两处的flag拼接起来解压压缩包显示密码不对，使用其他工具对图片查看没有收获，又回到获取flag1的地方，感觉后面少了什么，进行截图扔进stegslove里看看，在blue0处发现隐藏字符</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-9.png"></p>
+<blockquote>
+<p>即压缩包密码为: wELC0m3_T0_tH3_ISCC_Zo2z</p>
+</blockquote>
+<h3 id="解压后得到如下加密算法脚本"><a href="#解压后得到如下加密算法脚本" class="headerlink" title="解压后得到如下加密算法脚本"></a>解压后得到如下加密算法脚本</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-10.png"></p>
+<blockquote>
+<p>百度后发现其为 ctfwiki2014 原题。获取flag脚本如下(enc.txt内容替换encoded、pub.Key内容替换pubKey)</p>
+</blockquote>
+<pre class="line-numbers language-sega" data-language="sega"><code class="language-sega">pubKey = []
+nbit = len(pubKey)
+
+# open the encoded message
+
+encoded = 3747089221015927077910390742903041013428214013943427859826028561224205557341037794541249270578876119917824540898323411998858313156207953943399324076041832869747717457457883385757004645650529538
+# create a large matrix of 0's (dimensions are public key length +1)
+A = Matrix(ZZ, nbit + 1, nbit + 1)
+# fill in the identity matrix
+for i in range(nbit):
+    A[i, i] = 1
+# replace the bottom row with your public key
+for i in range(nbit):
+    A[i, nbit] = pubKey[i]
+# last element is the encoded message
+A[nbit, nbit] = -int(encoded)
+
+res = A.LLL()
+for i in range(0, nbit + 1):
+    # print solution
+    M = res.row(i).list()
+    flag = True
+    for m in M:
+        if m != 0 and m != 1:
+            flag = False
+            break
+    if flag:
+        print( i, M)
+        M = ''.join(str(j) for j in M)
+        # remove the last bit
+        M = M[:-1]
+        M = hex(int(M, 2))[2:-1]
+        print (M)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="使用在线sega运算该脚本"><a href="#使用在线sega运算该脚本" class="headerlink" title="使用在线sega运算该脚本"></a>使用<a target="_blank" rel="noopener" href="https://sagecell.sagemath.org/">在线sega运算</a>该脚本</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-11.png"></p>
+<h3 id="将得到的16进制转为文本即为flag"><a href="#将得到的16进制转为文本即为flag" class="headerlink" title="将得到的16进制转为文本即为flag"></a>将得到的<a target="_blank" rel="noopener" href="http://www.txttool.com/t/?id=NDgy">16进制转为文本</a>即为flag</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/t-12.png"></p>
+<h2 id="隐秘的信息"><a href="#隐秘的信息" class="headerlink" title="隐秘的信息"></a><font color="DarkTurquoise">隐秘的信息</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/y-1.png"></p>
+<h3 id="base64解码字符串"><a href="#base64解码字符串" class="headerlink" title="base64解码字符串"></a>base64解码字符串</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/y-2.png"></p>
+<h3 id="解压压缩包"><a href="#解压压缩包" class="headerlink" title="解压压缩包"></a>解压压缩包</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/y-3.png"></p>
+<h3 id="使用stegslove对其进行查看，发现存在信息隐藏"><a href="#使用stegslove对其进行查看，发现存在信息隐藏" class="headerlink" title="使用stegslove对其进行查看，发现存在信息隐藏"></a>使用stegslove对其进行查看，发现存在信息隐藏</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/y-4.png"></p>
+<h3 id="查看该信道"><a href="#查看该信道" class="headerlink" title="查看该信道"></a>查看该信道</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/y-5.png"></p>
+<blockquote>
+<p>前三行存在可疑信息，对其进行txt保存</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/y-6.png"></p>
+<h3 id="进行转换为2进制"><a href="#进行转换为2进制" class="headerlink" title="进行转换为2进制"></a>进行转换为2进制</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/y-7.png"></p>
+<blockquote>
+<p>因为ISCC的2进制为 01001001 01010011 01000011 01000011  , 在上面二进制数中发现存在一模一样的二进制数，对其开头进行逐一删除。获取flag。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/y-8.png"></p>
+<h2 id="真相只有一个"><a href="#真相只有一个" class="headerlink" title="真相只有一个"></a><font color="DarkTurquoise">真相只有一个</font></h2><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-1.png"></p>
+<h3 id="查看附件-1"><a href="#查看附件-1" class="headerlink" title="查看附件"></a>查看附件</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-2.png"></p>
+<h3 id="先对png进行信息获取"><a href="#先对png进行信息获取" class="headerlink" title="先对png进行信息获取"></a>先对png进行信息获取</h3><ul>
+<li>crc修复，发现一串摩斯电码</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-3.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-4.png"></p>
+<ul>
+<li>查看16进制</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-5.png"></p>
+<ul>
+<li>使用stegslove查看</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-6.png"></p>
+<blockquote>
+<p>发现 password  1998/xx</p>
+</blockquote>
+<h3 id="查看flag-txt"><a href="#查看flag-txt" class="headerlink" title="查看flag.txt"></a>查看flag.txt</h3><ul>
+<li>0宽隐写，并没有发现特征</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-7.png"></p>
+<ul>
+<li>snow隐写，缺少密码</li>
+</ul>
+<h3 id="查看steam文件"><a href="#查看steam文件" class="headerlink" title="查看steam文件"></a>查看steam文件</h3><ul>
+<li>010editor打开，发现其为zip文件头，修复文件头，并添加后缀名。解压需要密码。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-8.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-9.png"></p>
+<h3 id="综上发现其解题思路为-png获取的-passwd-生成字典密码进行爆破zip文件"><a href="#综上发现其解题思路为-png获取的-passwd-生成字典密码进行爆破zip文件" class="headerlink" title="综上发现其解题思路为: png获取的 passwd 生成字典密码进行爆破zip文件"></a>综上发现其解题思路为: png获取的 passwd 生成字典密码进行爆破zip文件</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">filename = "p.txt"
+with open(filename,'w') as f:
+    for i in range(1,13):
+        for j in range(1,32):
+            if i&lt;10 :
+                if j&lt;10:
+                    f.write('1998'+'0'+str(i)+'0'+str(j)+'\n')
+                else:
+                    f.write('1998'+'0'+str(i)+''+str(j)+'\n')
+            else:
+                if j&lt;10:
+                    f.write('1998'+''+str(i)+'0'+str(j)+'\n')
+                else:
+                    f.write('1998'+''+str(i)+''+str(j)+'\n')<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-10.png"></p>
+<h3 id="进行解压，提取出来的文件为pacp文件，导入wireshark，查找字符password，发现可疑文件mp3"><a href="#进行解压，提取出来的文件为pacp文件，导入wireshark，查找字符password，发现可疑文件mp3" class="headerlink" title="进行解压，提取出来的文件为pacp文件，导入wireshark，查找字符password，发现可疑文件mp3"></a>进行解压，提取出来的文件为pacp文件，导入wireshark，查找字符password，发现可疑文件mp3</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-11.png"></p>
+<h3 id="进行mp3内容提取"><a href="#进行mp3内容提取" class="headerlink" title="进行mp3内容提取"></a>进行mp3内容提取</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-12.png"></p>
+<h3 id="查看mp3波峰，发现其为摩斯密码-短对应-长对应-…-–-…-解密完为-ISCCMISC"><a href="#查看mp3波峰，发现其为摩斯密码-短对应-长对应-…-–-…-解密完为-ISCCMISC" class="headerlink" title="查看mp3波峰，发现其为摩斯密码(短对应 .   长对应 - )  .. … -.-. -.-. – .. … -.-. 解密完为 ISCCMISC"></a>查看mp3波峰，发现其为摩斯密码(短对应 .   长对应 - )  .. … -.-. -.-. – .. … -.-. 解密完为 ISCCMISC</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-13.png"></p>
+<h3 id="使用snow对flag-txt文件进行解密"><a href="#使用snow对flag-txt文件进行解密" class="headerlink" title="使用snow对flag.txt文件进行解密"></a>使用snow对flag.txt文件进行解密</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/z-14.png"></p>
+<h2 id="小光学AI"><a href="#小光学AI" class="headerlink" title="小光学AI"></a><font color="DarkTurquoise">小光学AI</font></h2><blockquote>
+<p>不会AI，采用字典跑试试运气，结果真遇到了非预期(后期修复了这个非预期)</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/img/x-1.png"></p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">from fileinput import filename
+from tqdm import tqdm
+
+filename = "password.txt"
+with open(filename, 'w') as f:
+    for i in tqdm(range(1,10)):
+        for j in range(1,10):
+            for k in range(1,10):
+                print(i,j,k)
+                for l in range(1,100000):
+                    f.write(str(i*l)+'：' + str(j*l) + '：' +str(k * l) + '\n')<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
                 
             </div>
             <hr/>
@@ -961,12 +1235,12 @@ new Valine({
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/05/21/kali-vega/">
+                <a href="/2022/05/21/pwn/">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="Kali2021安装Vega">
+                        <img src="/medias/featureimages/Pwn.jpg" class="responsive-img" alt="Pwn">
                         
-                        <span class="card-title">Kali2021安装Vega</span>
+                        <span class="card-title">Pwn</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -983,8 +1257,8 @@ new Valine({
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Kali-Tools/" class="post-category">
-                                    Kali-Tools
+                            <a href="/categories/ISCC-2022/" class="post-category">
+                                    ISCC-2022
                                 </a>
                             
                             
@@ -994,12 +1268,16 @@ new Valine({
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Vega/">
-                        <span class="chip bg-color">Vega</span>
+                    <a href="/tags/CTF/">
+                        <span class="chip bg-color">CTF</span>
                     </a>
                     
-                    <a href="/tags/Kali-Tools/">
-                        <span class="chip bg-color">Kali-Tools</span>
+                    <a href="/tags/ISCC-2022/">
+                        <span class="chip bg-color">ISCC-2022</span>
+                    </a>
+                    
+                    <a href="/tags/Pwn/">
+                        <span class="chip bg-color">Pwn</span>
                     </a>
                     
                 </div>
@@ -1013,12 +1291,12 @@ new Valine({
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/05/21/reverse/">
+                <a href="/2022/05/21/web/">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/Reverse.jpg" class="responsive-img" alt="Reverse">
+                        <img src="/medias/featureimages/web.jpg" class="responsive-img" alt="Web">
                         
-                        <span class="card-title">Reverse</span>
+                        <span class="card-title">Web</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1054,8 +1332,8 @@ new Valine({
                         <span class="chip bg-color">ISCC-2022</span>
                     </a>
                     
-                    <a href="/tags/Reverse/">
-                        <span class="chip bg-color">Reverse</span>
+                    <a href="/tags/Web/">
+                        <span class="chip bg-color">Web</span>
                     </a>
                     
                 </div>
@@ -1294,7 +1572,7 @@ new Valine({
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">529</span>&nbsp;字
+                class="white-color">13.8k</span>&nbsp;字
             
             
             

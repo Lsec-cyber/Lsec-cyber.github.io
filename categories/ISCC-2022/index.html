@@ -392,7 +392,7 @@
                 </a>
                 
                 
-                <a href="/categories/ISCC-2022/" title="ISCC-2022: 5">
+                <a href="/categories/ISCC-2022/" title="ISCC-2022: 6">
 
                     <div class="moleskine-wrapper">
                         <div class="moleskine-notebook">
@@ -545,23 +545,39 @@
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2022/05/21/pwn/">
+                    <a href="/2022/05/25/shi-zhan-ti/">
                         <div class="card-image tag-image">
                             
-                            <img src="/medias/featureimages/Pwn.jpg" class="responsive-img" alt="Pwn">
+                            <img src="/medias/featureimages/web.jpg" class="responsive-img" alt="实战题">
                             
-                            <span class="card-title">Pwn</span>
+                            <span class="card-title">实战题</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                
+                                阶段一
+简单信息收集访问网站查看
+
+目录扫描…..奈何网站环境太差….
+
+查看网站框架
+进行用户注册
+
+发现无法注册
+
+
+进行密码找回
+
+并无法收到邮件
+
+发现挂上VPN无法ping通对方服务器使用火绒剑查看该VPN
+使用 HTTP Deb
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-25
                             </span>
                             <span class="publish-author">
                                 
@@ -587,8 +603,68 @@
                             <span class="chip bg-color">ISCC-2022</span>
                         </a>
                         
-                        <a href="/tags/Pwn/">
-                            <span class="chip bg-color">Pwn</span>
+                        <a href="/tags/%E5%AE%9E%E6%88%98%E9%A2%98/">
+                            <span class="chip bg-color">实战题</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2022/05/22/reverse/">
+                        <div class="card-image tag-image">
+                            
+                            <img src="/medias/featureimages/Reverse.jpg" class="responsive-img" alt="Reverse">
+                            
+                            <span class="card-title">Reverse</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                GetTheTable
+使用IDA打开程序，查看main
+
+观察代码段发现其对输入的数据与  ERaQux2gcaecxk8pM3y7eFGhmE  进行比较 ，对这个进行base58解码即可
+
+
+Amy’s Code
+使用IDA打开程序，
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-22
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/ISCC-2022/" class="post-category">
+                                    ISCC-2022
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/CTF/">
+                            <span class="chip bg-color">CTF</span>
+                        </a>
+                        
+                        <a href="/tags/ISCC-2022/">
+                            <span class="chip bg-color">ISCC-2022</span>
+                        </a>
+                        
+                        <a href="/tags/Reverse/">
+                            <span class="chip bg-color">Reverse</span>
                         </a>
                         
                     </div>
@@ -609,7 +685,10 @@
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                
+                                Mobile A
+使用jadx-gui打开apk文件，搜索main函数
+查看  com.example.mobilea.MainActivityprivate boolean Jlast(String str) {
+        try 
                             
                         </div>
                         <div class="publish-info">
@@ -651,6 +730,66 @@
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
+                    <a href="/2022/05/21/pwn/">
+                        <div class="card-image tag-image">
+                            
+                            <img src="/medias/featureimages/Pwn.jpg" class="responsive-img" alt="Pwn">
+                            
+                            <span class="card-title">Pwn</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                create_id
+exp如下:from pwn import *
+#r=process("./31")
+r=remote("ip","port")
+r.recv(2)
+t=int(r.recv(8),16)
+print((t))
+r.se
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/ISCC-2022/" class="post-category">
+                                    ISCC-2022
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/CTF/">
+                            <span class="chip bg-color">CTF</span>
+                        </a>
+                        
+                        <a href="/tags/ISCC-2022/">
+                            <span class="chip bg-color">ISCC-2022</span>
+                        </a>
+                        
+                        <a href="/tags/Pwn/">
+                            <span class="chip bg-color">Pwn</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
                     <a href="/2022/05/21/misc/">
                         <div class="card-image tag-image">
                             
@@ -662,7 +801,18 @@
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                
+                                2022冬奥会
+
+题目已经提示了很明显，其实压缩包密码就是灯笼
+
+
+###进行crc修复，附上脚本
+import binascii
+import struct
+import sys
+
+file = input("图片地址：")
+fr = o
                             
                         </div>
                         <div class="publish-info">
@@ -704,59 +854,6 @@
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2022/05/21/reverse/">
-                        <div class="card-image tag-image">
-                            
-                            <img src="/medias/featureimages/Reverse.jpg" class="responsive-img" alt="Reverse">
-                            
-                            <span class="card-title">Reverse</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/ISCC-2022/" class="post-category">
-                                    ISCC-2022
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/CTF/">
-                            <span class="chip bg-color">CTF</span>
-                        </a>
-                        
-                        <a href="/tags/ISCC-2022/">
-                            <span class="chip bg-color">ISCC-2022</span>
-                        </a>
-                        
-                        <a href="/tags/Reverse/">
-                            <span class="chip bg-color">Reverse</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
                     <a href="/2022/05/21/web/">
                         <div class="card-image tag-image">
                             
@@ -768,9 +865,7 @@
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                
-冬奥会
-
+                                冬奥会
 访问得到代码段&lt;?php
 
 show_source(__FILE__);
@@ -778,7 +873,7 @@ show_source(__FILE__);
 $Step1=False;
 $Step2=False;
 
-$info=(array)json_decode(@$_GET['Information
+$info=(array)json_decode(@$_GET['Information']
                             
                         </div>
                         <div class="publish-info">
@@ -893,7 +988,7 @@ $info=(array)json_decode(@$_GET['Information
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">529</span>&nbsp;字
+                class="white-color">13.8k</span>&nbsp;字
             
             
             
