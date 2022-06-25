@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>SSRF</title>
+      <link href="/2022/06/25/ssrf/"/>
+      <url>/2022/06/25/ssrf/</url>
+      
+        <content type="html"><![CDATA[<h2 id="服务器端请求伪造"><a href="#服务器端请求伪造" class="headerlink" title="服务器端请求伪造"></a>服务器端请求伪造</h2><h3 id="常见功能点"><a href="#常见功能点" class="headerlink" title="常见功能点"></a>常见功能点</h3><ol><li><p>PDF 生成 例如生成 PDF 报告、信用卡对帐单。</p></li><li><p>文件上传 例如上传扫描的文件、图像文件等。</p></li></ol><h3 id="案例复现"><a href="#案例复现" class="headerlink" title="案例复现"></a>案例复现</h3><h4 id="登录用户"><a href="#登录用户" class="headerlink" title="登录用户"></a>登录用户</h4><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/2222.jpg" alt="2222"></p><h4 id="进行探测"><a href="#进行探测" class="headerlink" title="进行探测"></a>进行探测</h4><blockquote><p><a href="https://en.wikipedia.org/wiki/Attack_surface"><strong>攻击面</strong></a>映射是分析应用程序的核心功能、业务逻辑和控制流的过程，以识别攻击者可能尝试进入应用程序环境的潜在输入或向量。</p></blockquote><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625221101948.png" alt="image-20220625221101948"></p><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625221106914.png" alt="image-20220625221106914"></p><h4 id="测试图片上传"><a href="#测试图片上传" class="headerlink" title="测试图片上传"></a>测试图片上传</h4><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625221229330.png" alt="image-20220625221229330"></p><h4 id="发现s3存储跳转"><a href="#发现s3存储跳转" class="headerlink" title="发现s3存储跳转"></a>发现<code>s3</code>存储跳转</h4><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625221419585.png" alt="image-20220625221419585"></p><blockquote><p>进行变更跳转</p></blockquote><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625221555253.png" alt="image-20220625221555253"></p><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625221628560.png" alt="image-20220625221628560"></p><blockquote><p>成功变更资源</p></blockquote><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625221851205.png" alt="image-20220625221851205"></p><h4 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h4><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625222556770.png" alt="image-20220625222556770"></p><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625222604603.png" alt="image-20220625222604603"></p><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625222609925.png" alt="image-20220625222609925"></p><h4 id="进行利用"><a href="#进行利用" class="headerlink" title="进行利用"></a>进行利用</h4><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625222719697.png" alt="image-20220625222719697"></p><blockquote><p>成功获取内部资源</p></blockquote><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625222839243.png" alt="image-20220625222839243"></p><blockquote><p>进一步利用获取key</p></blockquote><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625223030996.png" alt="image-20220625223030996"></p><blockquote><p>便可接管平台</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> OWASP-top-10 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 漏洞解析 </tag>
+            
+            <tag> SSRF </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>SQL</title>
       <link href="/2022/06/25/sql/"/>
       <url>/2022/06/25/sql/</url>
