@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Kali2021安装Vega, Lsec">
+    <meta name="keywords" content="XSS, Lsec">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Kali2021安装Vega | Lsec</title>
+    <title>XSS | Lsec</title>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/Lsec-cyber/Lsec-cyber.github.io/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/Lsec-cyber/Lsec-cyber.github.io/libs/awesome/css/all.css">
@@ -322,12 +322,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/Misc.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Kali2021安装Vega</h1>
+                    <h1 class="description center-align post-title">XSS</h1>
                 </div>
             </div>
         </div>
@@ -443,12 +443,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Vega/">
-                                <span class="chip bg-color">Vega</span>
+                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E8%A7%A3%E6%9E%90/">
+                                <span class="chip bg-color">漏洞解析</span>
                             </a>
                         
-                            <a href="/tags/Kali-Tools/">
-                                <span class="chip bg-color">Kali-Tools</span>
+                            <a href="/tags/XSS/">
+                                <span class="chip bg-color">XSS</span>
                             </a>
                         
                     </div>
@@ -459,8 +459,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Kali-Tools/" class="post-category">
-                                Kali-Tools
+                            <a href="/categories/OWASP-top-10/" class="post-category">
+                                OWASP-top-10
                             </a>
                         
                     </div>
@@ -472,21 +472,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-05-20
+                    2022-06-25
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-05-25
+                    2022-06-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    305
+                    118
                 </div>
                 
 
@@ -516,48 +516,33 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-前期准备：-Vega、jdk1-8-Linux版"><a href="#1-前期准备：-Vega、jdk1-8-Linux版" class="headerlink" title="1.前期准备： Vega、jdk1.8(Linux版)"></a>1.前期准备： Vega、jdk1.8(Linux版)</h2><h2 id="2-配置jdk1-8环境-jdk所放路径根据个人喜好，这里我jdk包已放在-x2F-opt-x2F-目录下"><a href="#2-配置jdk1-8环境-jdk所放路径根据个人喜好，这里我jdk包已放在-x2F-opt-x2F-目录下" class="headerlink" title="2.配置jdk1.8环境(jdk所放路径根据个人喜好，这里我jdk包已放在 /opt/ 目录下)"></a>2.配置jdk1.8环境(jdk所放路径根据个人喜好，这里我jdk包已放在 /opt/ 目录下)</h2><p>设置全局变量</p>
-<p><img src="/medias/Kali/Vega/1.jpg"> </p>
-<h2 id="3-切换jdk1-8"><a href="#3-切换jdk1-8" class="headerlink" title="3.切换jdk1.8"></a>3.切换jdk1.8</h2><p><img src="/medias/Kali/Vega/2.jpg"> </p>
-<p><img src="/medias/Kali/Vega/3.jpg"> </p>
-<h2 id="4-更换apt更新源，加入stretch-这里个人使用清华源"><a href="#4-更换apt更新源，加入stretch-这里个人使用清华源" class="headerlink" title="4.更换apt更新源，加入stretch (这里个人使用清华源)"></a>4.更换apt更新源，加入stretch (这里个人使用清华源)</h2><p><img src="/medias/Kali/Vega/4.jpg"> </p>
-<p><img src="/medias/Kali/Vega/5.jpg"> </p>
-<p><img src="/medias/Kali/Vega/6.jpg"> </p>
-<h2 id="5-安装依赖-ibwebkitgtk-1-0-0"><a href="#5-安装依赖-ibwebkitgtk-1-0-0" class="headerlink" title="5.安装依赖 ibwebkitgtk-1.0-0"></a>5.安装依赖 ibwebkitgtk-1.0-0</h2><p>命令: apt install libwebkitgtk-1.0-0</p>
-<p><img src="/medias/Kali/Vega/7.jpg"> </p>
-<h2 id="6-美化安装方便使用"><a href="#6-美化安装方便使用" class="headerlink" title="6.美化安装方便使用"></a>6.美化安装方便使用</h2><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">#!/bin/bash
-
-defaultText="\e[39m"
-blueText="\e[34m"
-yellowText="\e[33m"
-redText="\e[31m"
-greenText="\e[32m"
-
-cp -r vega /usr/share/
-# Create Accessable Launcher
-echo -e "${blueText}Creating Desktop Icon . . .${defaultText}"
-echo "[Desktop Entry]" | sudo tee -a /usr/share/applications/Vega.desktop
-echo "Name=Vega" | sudo tee -a /usr/share/applications/Vega.desktop
-echo "Exec=/usr/share/vega/Vega" | sudo tee -a /usr/share/applications/Vega.desktop
-echo "Icon=/usr/share/vega/Vega.png" | sudo tee -a /usr/share/applications/Vega.desktop
-echo "Terminal=false" | sudo tee -a /usr/share/applications/Vega.desktop
-echo "Type=Application" | sudo tee -a /usr/share/applications/Vega.desktop
-echo "Categories=03-webapp-analysis;03-05-web-vulnerability-scanners;" | sudo tee -a /usr/share/applications/Vega.desktop
-
-# Finish
-echo -e "${greenText}Vega should now be installed!\nLaunch via Applications/Web Application Analysis/Vega"<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>installvega.sh文件与Vega在同一目录下</p>
-<p><img src="/medias/Kali/Vega/8.jpg"> </p>
-<p><img src="/medias/Kali/Vega/9.jpg"> </p>
-<h2 id="7-问题解决"><a href="#7-问题解决" class="headerlink" title="7.问题解决"></a>7.问题解决</h2><p>1.未设置jdk1.8环境，重复2-3步</p>
-<p><img src="/medias/Kali/Vega/10.jpg"> </p>
-<p>2.未安装依赖，重复4-5步</p>
-<p><img src="/medias/Kali/Vega/11.jpg"></p>
-<ol start="3">
-<li>普通用户无法启动Vega(权限不够)，解决办法—–&gt;使用普通用户进行解压文件</li>
-</ol>
-<p><img src="/medias/Kali/Vega/12.jpg">  </p>
+                <h2 id="跨站点脚本执行漏洞"><a href="#跨站点脚本执行漏洞" class="headerlink" title="跨站点脚本执行漏洞"></a>跨站点脚本执行漏洞</h2><h3 id="分析应用程序的核心功能、业务逻辑和控制流"><a href="#分析应用程序的核心功能、业务逻辑和控制流" class="headerlink" title="分析应用程序的核心功能、业务逻辑和控制流"></a>分析应用程序的核心功能、业务逻辑和控制流</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625223618367.png" alt="image-20220625223618367"></p>
+<h3 id="进行测试"><a href="#进行测试" class="headerlink" title="进行测试"></a>进行测试</h3><h4 id="观察回显"><a href="#观察回显" class="headerlink" title="观察回显"></a>观察回显</h4><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625223715520.png" alt="image-20220625223715520"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625223724179.png" alt="image-20220625223724179"></p>
+<blockquote>
+<p>可以发现 xxx 出现在回显页面里，进行xss测试</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625223839891.png" alt="image-20220625223839891"></p>
+<blockquote>
+<p>成功利用</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625223853356.png" alt="image-20220625223853356"></p>
+<h3 id="进阶利用"><a href="#进阶利用" class="headerlink" title="进阶利用"></a>进阶利用</h3><h4 id="将用户重定向到另一个网站"><a href="#将用户重定向到另一个网站" class="headerlink" title="将用户重定向到另一个网站"></a>将用户重定向到另一个网站</h4><blockquote>
+<p>本地启动一个服务</p>
+</blockquote>
+<blockquote>
+<p>payload: <code>&lt;script&gt;document.location = 'www.attacker.com';&lt;/script&gt;</code></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625224208206.png" alt="image-20220625224208206"></p>
+<blockquote>
+<p>点击链接后进行登录</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625224307127.png" alt="image-20220625224307127"></p>
+<blockquote>
+<p>获取用户输入的账号密码</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625224434798.png" alt="image-20220625224434798"></p>
+<h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h3><p><img src="https://cdn.jsdelivr.net/gh/Lsec-cyber/images@main/D/image-20220625224658805.png" alt="image-20220625224658805"></p>
 
                 
             </div>
@@ -584,7 +569,7 @@ echo -e "${greenText}Vega should now be installed!\nLaunch via Applications/Web 
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://lsec-cyber.github.io/2022/05/20/kali-vega/">https://lsec-cyber.github.io/2022/05/20/kali-vega/</a>
+                    <a href="https://lsec-cyber.github.io/2022/06/25/xss/">https://lsec-cyber.github.io/2022/06/25/xss/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -622,12 +607,12 @@ echo -e "${greenText}Vega should now be installed!\nLaunch via Applications/Web 
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Vega/">
-                                    <span class="chip bg-color">Vega</span>
+                                <a href="/tags/%E6%BC%8F%E6%B4%9E%E8%A7%A3%E6%9E%90/">
+                                    <span class="chip bg-color">漏洞解析</span>
                                 </a>
                             
-                                <a href="/tags/Kali-Tools/">
-                                    <span class="chip bg-color">Kali-Tools</span>
+                                <a href="/tags/XSS/">
+                                    <span class="chip bg-color">XSS</span>
                                 </a>
                             
                         </div>
@@ -995,12 +980,12 @@ new Valine({
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/05/21/web/">
+                <a href="/2022/06/25/sql/">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/web.jpg" class="responsive-img" alt="Web">
+                        <img src="/medias/featureimages/Misc.jpg" class="responsive-img" alt="SQL">
                         
-                        <span class="card-title">Web</span>
+                        <span class="card-title">SQL</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1011,8 +996,60 @@ new Valine({
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-05-21
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-25
                         </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/OWASP-top-10/" class="post-category">
+                                    OWASP-top-10
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%BC%8F%E6%B4%9E%E8%A7%A3%E6%9E%90/">
+                        <span class="chip bg-color">漏洞解析</span>
+                    </a>
+                    
+                    <a href="/tags/SQL%E6%B3%A8%E5%85%A5/">
+                        <span class="chip bg-color">SQL注入</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/05/25/shi-zhan-ti/">
+                    <div class="card-image">
+                        
+                        <img src="/medias/featureimages/web.jpg" class="responsive-img" alt="实战题">
+                        
+                        <span class="card-title">实战题</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-25
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1036,61 +1073,8 @@ new Valine({
                         <span class="chip bg-color">ISCC-2022</span>
                     </a>
                     
-                    <a href="/tags/Web/">
-                        <span class="chip bg-color">Web</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
-            </div>
-            <div class="card">
-                <a href="/2022/05/20/kali-vega/">
-                    <div class="card-image">
-                        
-                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="Kali2021安装Vega">
-                        
-                        <span class="card-title">Kali2021安装Vega</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-05-20
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Kali-Tools/" class="post-category">
-                                    Kali-Tools
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Vega/">
-                        <span class="chip bg-color">Vega</span>
-                    </a>
-                    
-                    <a href="/tags/Kali-Tools/">
-                        <span class="chip bg-color">Kali-Tools</span>
+                    <a href="/tags/%E5%AE%9E%E6%88%98%E9%A2%98/">
+                        <span class="chip bg-color">实战题</span>
                     </a>
                     
                 </div>
