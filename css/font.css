@@ -1,0 +1,136 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3835765 */
+  /* Color fonts */
+  src: 
+       url('//at.alicdn.com/t/c/font_3835765_rb8qcqjaak.woff2?t=1690358289897') format('woff2'),
+       url('//at.alicdn.com/t/c/font_3835765_rb8qcqjaak.woff?t=1690358289897') format('woff'),
+       url('//at.alicdn.com/t/c/font_3835765_rb8qcqjaak.ttf?t=1690358289897') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-shibingjiaozhanxitong:before {
+  content: "\e644";
+}
+
+.icon-zhongguobingqigongyejituanlogo:before {
+  content: "\e777";
+}
+
+.icon-gongjuxiang:before {
+  content: "\e6dc";
+}
+
+.icon-xitonggongju:before {
+  content: "\e653";
+}
+
+.icon-xiaoyuandaohang:before {
+  content: "\e633";
+}
+
+.icon-yunpan:before {
+  content: "\f263";
+}
+
+.icon-kongtiaomoduanjiankongxitong:before {
+  content: "\e638";
+}
+
+.icon-gongzhonghao:before {
+  content: "\e643";
+}
+
+.icon-shujutongji:before {
+  content: "\e624";
+}
+
+.icon-dengpao:before {
+  content: "\e687";
+}
+
+.icon-sousuo:before {
+  content: "\e68f";
+}
+
+.icon-QQ:before {
+  content: "\e876";
+}
+
+.icon-weixin:before {
+  content: "\e607";
+}
+
+.icon-biaoqianA01_shouye-31:before {
+  content: "\ea6c";
+}
+
+.icon-github:before {
+  content: "\e722";
+}
+
+.icon-biaoqianpai:before {
+  content: "\e60b";
+}
+
+.icon-fenlei:before {
+  content: "\e689";
+}
+
+.icon-wenzhang:before {
+  content: "\ec64";
+}
+
+.icon-beibao2:before {
+  content: "\e622";
+}
+
+.icon-shu:before {
+  content: "\e626";
+}
+
+.icon-jinbi:before {
+  content: "\e627";
+}
+
+.icon-aixin:before {
+  content: "\e62a";
+}
+
+.icon-rili:before {
+  content: "\e62d";
+}
+
+.icon-cunqianguan:before {
+  content: "\e65d";
+}
+
+.icon-tianping:before {
+  content: "\e686";
+}
+
+.icon-zhifeiji:before {
+  content: "\e68a";
+}
+
+.icon-caihong:before {
+  content: "\e697";
+}
+
+.icon-xin:before {
+  content: "\e69b";
+}
+
+.icon-xiangji:before {
+  content: "\e69c";
+}
+
+.icon-jiaonang:before {
+  content: "\e6ac";
+}
